@@ -45,6 +45,32 @@ class PageController extends Controller
         ]);
     }
     public function nofreq() {
-        // Logika untuk halaman nofreq
+        $videos = [
+            [
+                'title' => 'Live Set 1',
+                'thumbnail' => 'https://i.ytimg.com/vi/your_youtube_video_id_1/mqdefault.jpg', // Ganti
+                'youtube_id' => 'your_youtube_video_id_1' // Ganti
+            ],
+            [
+                'title' => 'Live Set 2',
+                'thumbnail' => 'https://i.ytimg.com/vi/your_youtube_video_id_2/mqdefault.jpg', // Ganti
+                'youtube_id' => 'your_youtube_video_id_2' // Ganti
+            ],
+            [
+                'title' => 'Live Set 3',
+                'thumbnail' => 'https://i.ytimg.com/vi/your_youtube_video_id_3/mqdefault.jpg', // Ganti
+                'youtube_id' => 'your_youtube_video_id_3' // Ganti
+            ],
+            [
+                'title' => 'Live Set 4',
+                'thumbnail' => 'https://i.ytimg.com/vi/your_youtube_video_id_4/mqdefault.jpg', // Ganti
+                'youtube_id' => 'your_youtube_video_id_4' // Ganti
+            ],
+        ];
+
+        return view('pages.nofreq', [
+            'videos' => $videos,
+        ]);
+    
     }
 }

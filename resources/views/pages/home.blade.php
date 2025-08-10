@@ -17,29 +17,19 @@
                 <h2 class="text-4xl font-bold text-center mb-12">Track Record Activity</h2>
                 <div class="swiper swiper-activity overflow-visible">
                     <div class="swiper-wrapper items-center">
-                        {{-- 
-                            ==================================================================
-                            PERBAIKAN KUNCI DI SINI: MENAMBAHKAN `style="width: 70%"`
-                            Ini akan membatasi lebar setiap slide, sehingga slide di sampingnya
-                            akan terlihat menumpuk di belakang, persis seperti di template.
-                            ==================================================================
-                        --}}
                         <div class="swiper-slide" style="width: 70%">
                             <div class="bg-black/40 backdrop-blur-sm border border-gray-700/50 rounded-lg overflow-hidden">
                                 <img src="{{ asset('assets/home/hero-flyer.png') }}" alt="Track Record 1" class="w-full h-96 object-cover">
-                                <div class="p-4"><p class="text-gray-300 text-sm">Deskripsi untuk activity 1</p></div>
                             </div>
                         </div>
                         <div class="swiper-slide" style="width: 70%">
                             <div class="bg-black/40 backdrop-blur-sm border border-gray-700/50 rounded-lg overflow-hidden">
                                 <img src="{{ asset('assets/home/hero-flyer.png') }}" alt="Track Record 2" class="w-full h-96 object-cover">
-                                <div class="p-4"><p class="text-gray-300 text-sm">Deskripsi untuk activity 2</p></div>
                             </div>
                         </div>
                         <div class="swiper-slide" style="width: 70%">
                             <div class="bg-black/40 backdrop-blur-sm border border-gray-700/50 rounded-lg overflow-hidden">
                                 <img src="{{ asset('assets/home/hero-flyer.png') }}" alt="Track Record 3" class="w-full h-96 object-cover">
-                                <div class="p-4"><p class="text-gray-300 text-sm">Deskripsi untuk activity 3</p></div>
                             </div>
                         </div>
                     </div>
