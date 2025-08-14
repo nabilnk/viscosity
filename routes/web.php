@@ -1,16 +1,18 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\PageController;
-use App\Http\Controllers\Auth\RegisteredUserController;
-use App\Http\Controllers\Auth\PasswordResetLinkController;
-use App\Http\Controllers\Auth\NewPasswordController;
 use Illuminate\Support\Str;
 
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\EventController;
+use App\Http\Controllers\TalentController;
+use App\Http\Controllers\NofreqController;
+use App\Http\Controllers\AssetHomeController;
+use App\Http\Controllers\VVIPController;
 
 
-// Route untuk Homepage dan halaman statis lainnya
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/event/monthly', [PageController::class, 'eventMonthly'])->name('event.monthly');
 Route::get('/event/exclusive', [PageController::class, 'eventExclusive'])->name('event.exclusive');
@@ -19,39 +21,91 @@ Route::get('/vvip', [PageController::class, 'vvip'])->name('vvip');
 Route::get('/nofreq', [PageController::class, 'nofreq'])->name('nofreq');
 
 
-// Route bawaan Breeze untuk dashboard dan profil
+// ==================
+// User Dashboard (Bawaan Breeze)
+// ==================
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+
+// ==================
+// Profile User (Butuh Login)
+// ==================
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/register', [RegisteredUserController::class, 'create'])
-                ->name('register');
 
-Route::post('/register', [RegisteredUserController::class, 'store']);
-
-Route::get('forgot-password', [PasswordResetLinkController::class, 'create'])
-                ->name('password.request');
-
-Route::post('forgot-password', [PasswordResetLinkController::class, 'store'])
-                ->name('password.email');
-
-Route::get('reset-password/{token}', [NewPasswordController::class, 'create'])
-                ->name('password.reset');
-
-Route::post('reset-password', [NewPasswordController::class, 'store'])
-                ->name('password.store');
-
-
-    Route::get('/test-reset-password', function () {
-    $token = Str::random(60); // Buat token acak
-    $email = 'testing@gmail.com'; // Ganti dengan email yang ada di database Anda
+// ==================
+// Reset Password (Testing)
+// ==================
+Route::get('/test-reset-password', function () {
+    $token = Str::random(60);
+    $email = 'testing@gmail.com';
     return view('auth.reset-password', ['token' => $token, 'email' => $email]);
 });
 
+
+// ==================
+// Admin Panel (Butuh Login)
+// ==================
+Route::middleware(['auth'])->prefix('logadmin')->group(function () {
+
+    // Halaman utama admin
+    Route::get('/', [AdminController::class, 'index'])->name('admin.index');
+
+    // EVENTS
+    Route::prefix('events')->group(function () {
+        Route::get('/', [EventController::class, 'index'])->name('admin.events.index');
+        Route::get('/create', [EventController::class, 'create'])->name('admin.events.create');
+        Route::post('/', [EventController::class, 'store'])->name('admin.events.store');
+        Route::get('/{event}/edit', [EventController::class, 'edit'])->name('admin.events.edit');
+        Route::put('/{event}', [EventController::class, 'update'])->name('admin.events.update');
+        Route::delete('/{event}', [EventController::class, 'destroy'])->name('admin.events.destroy');
+    });
+
+    // TALENTS
+    Route::prefix('talents')->group(function () {
+        Route::get('/', [TalentController::class, 'index'])->name('admin.talents.index');
+        Route::get('/create', [TalentController::class, 'create'])->name('admin.talents.create');
+        Route::post('/', [TalentController::class, 'store'])->name('admin.talents.store');
+        Route::get('/{talent}/edit', [TalentController::class, 'edit'])->name('admin.talents.edit');
+        Route::put('/{talent}', [TalentController::class, 'update'])->name('admin.talents.update');
+        Route::delete('/{talent}', [TalentController::class, 'destroy'])->name('admin.talents.destroy');
+    });
+
+    // NOFREQS
+    Route::prefix('nofreqs')->group(function () {
+        Route::get('/', [NofreqController::class, 'index'])->name('admin.nofreqs.index');
+        Route::get('/create', [NofreqController::class, 'create'])->name('admin.nofreqs.create');
+        Route::post('/', [NofreqController::class, 'store'])->name('admin.nofreqs.store');
+        Route::get('/{nofreq}/edit', [NofreqController::class, 'edit'])->name('admin.nofreqs.edit');
+        Route::put('/{nofreq}', [NofreqController::class, 'update'])->name('admin.nofreqs.update');
+        Route::delete('/{nofreq}', [NofreqController::class, 'destroy'])->name('admin.nofreqs.destroy');
+    });
+
+    // ASSET HOME
+    Route::prefix('assets')->group(function () {
+        Route::get('/', [AssetHomeController::class, 'index'])->name('admin.assets.index');
+        Route::get('/create', [AssetHomeController::class, 'create'])->name('admin.assets.create');
+        Route::post('/', [AssetHomeController::class, 'store'])->name('admin.assets.store');
+        Route::get('/{asset}/edit', [AssetHomeController::class, 'edit'])->name('admin.assets.edit');
+        Route::put('/{asset}', [AssetHomeController::class, 'update'])->name('admin.assets.update');
+        Route::delete('/{asset}', [AssetHomeController::class, 'destroy'])->name('admin.assets.destroy');
+    });
+
+    // VVIP
+    Route::prefix('vvip')->group(function () {
+        Route::get('/', [VVIPController::class, 'index'])->name('admin.vvip.index');
+        Route::post('/toggle', [VVIPController::class, 'toggle'])->name('admin.vvip.toggle');
+    });
+});
+
+
+// ==================
+// Breeze Auth Routes
+// ==================
 require __DIR__.'/auth.php';
