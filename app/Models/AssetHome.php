@@ -11,9 +11,9 @@ class AssetHome extends Model
 
     protected $fillable = [
         'type', // track_record, documentation, our_team
-        'title',
-        'description',
         'image',
+        'name',
+        'documentation',
         'position' // untuk team (jabatan)
     ];
 }

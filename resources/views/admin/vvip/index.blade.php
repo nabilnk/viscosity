@@ -1,6 +1,5 @@
-@extends('layouts.admin')
+<x-admin-layout>
 
-@section('content')
 <div class="container mx-auto p-6">
     <h1 class="text-2xl font-bold mb-6">VVIP Settings</h1>
 
@@ -32,4 +31,5 @@
         </form>
     @endif
 </div>
-@endsection
+</x-admin-layout>
+

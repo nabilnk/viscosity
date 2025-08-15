@@ -1,6 +1,5 @@
-@extends('layouts.admin')
+<x-admin-layout>
 
-@section('content')
 <div class="container mx-auto p-6">
     <h1 class="text-xl font-bold mb-6">Tambah Talent</h1>
     <form action="{{ route('admin.talents.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
@@ -20,4 +19,5 @@
         <button class="bg-blue-600 text-white px-4 py-2 rounded">Simpan</button>
     </form>
 </div>
-@endsection
+</x-admin-layout>
+

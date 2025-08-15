@@ -13,27 +13,27 @@
                 {{-- Username --}}
                 <div class="relative">
                     <input
-                        id="username"
-                        name="username"
+                        id="email"
+                        name="email"
                         type="text"
                         required
                         class="peer placeholder-transparent h-10 w-full border-0 border-b border-gray-400 
                         bg-transparent text-gray-100 focus:outline-none focus:ring-0 focus:border-purple-400 pr-10"
-                        placeholder="Username"
+                        placeholder="email"
                     />
                     <label
-                        for="username"
+                        for="email"
                         class="absolute left-0 -top-3.5 text-gray-300 text-sm 
                         font-bold peer-placeholder-shown:text-base peer-placeholder-shown:top-2 
                         transition-all peer-focus:-top-3.5 peer-focus:text-white peer-focus:text-sm"
                     >
-                        Username
+                        Email
                     </label>
                     {{-- Icon Profile di kanan --}}
                     <svg xmlns="http://www.w3.org/2000/svg" class="absolute right-0 top-2 w-5 h-5 text-gray-400 pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.75 7.5a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.5 20.25a8.25 8.25 0 1 1 15 0v.75H4.5v-.75Z" />
                     </svg>
-                    <x-input-error :messages="$errors->get('username')" class="mt-2 text-xs text-red-400" />
+                    <x-input-error :messages="$errors->get('email')" class="mt-2 text-xs text-red-400" />
                 </div>
 
                 {{-- Password --}}

@@ -1,6 +1,4 @@
-@extends('layouts.admin')
-
-@section('content')
+<x-admin-layout>
 <div class="container mx-auto py-10">
     <h1 class="text-2xl font-bold mb-6">Event Monthly</h1>
     <a href="{{ route('admin.events.create') }}" class="px-4 py-2 bg-purple-600 text-white rounded">+ Tambah Event</a>
@@ -36,4 +34,5 @@
         </tbody>
     </table>
 </div>
-@endsection
+</x-admin-layout>
+

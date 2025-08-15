@@ -1,6 +1,5 @@
-@extends('layouts.admin')
+<x-admin-layout>
 
-@section('content')
 @php
     $yt = $nofreq->youtube_link ?? '';
     $vid = null;
@@ -65,4 +64,5 @@
         </div>
     </form>
 </div>
-@endsection
+</x-admin-layout>
+

@@ -1,6 +1,5 @@
-@extends('layouts.admin')
+<x-admin-layout>
 
-@section('content')
 <div class="container mx-auto py-10">
     <h1 class="text-2xl font-bold mb-6">Edit Event Monthly</h1>
 
@@ -25,4 +24,5 @@
         <button type="submit" class="px-4 py-2 bg-purple-600 text-white rounded">Update</button>
     </form>
 </div>
-@endsection
+</x-admin-layout>
+

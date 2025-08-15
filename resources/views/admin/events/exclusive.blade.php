@@ -1,6 +1,4 @@
-@extends('layouts.admin')
-
-@section('content')
+<x-admin-layout>
 <div class="container mx-auto p-6">
     <h1 class="text-2xl font-bold mb-6">Event Exclusive</h1>
 
@@ -46,4 +44,5 @@
         </table>
     @endif
 </div>
-@endsection
+</x-admin-layout>
+

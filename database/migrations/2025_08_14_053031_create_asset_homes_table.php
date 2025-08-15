@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('asset_homes', function (Blueprint $table) {
             $table->id();
+            $table->enum('type', ['track_record', 'our_team'])->default('track_record');
+            $table->string('name')->nullable();
+            $table->string('position')->nullable();
+            $table->string('image')->nullable();
+            $table->string('documentation')->nullable(); 
             $table->timestamps();
         });
     }

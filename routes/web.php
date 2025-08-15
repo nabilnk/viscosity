@@ -54,6 +54,7 @@ Route::get('/test-reset-password', function () {
 // ==================
 Route::middleware(['auth'])->prefix('logadmin')->group(function () {
 
+    
     // Halaman utama admin
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
 
@@ -65,6 +66,7 @@ Route::middleware(['auth'])->prefix('logadmin')->group(function () {
         Route::get('/{event}/edit', [EventController::class, 'edit'])->name('admin.events.edit');
         Route::put('/{event}', [EventController::class, 'update'])->name('admin.events.update');
         Route::delete('/{event}', [EventController::class, 'destroy'])->name('admin.events.destroy');
+        Route::get('/events/exclusive', [EventController::class, 'exclusive'])->name('admin.events.exclusive');
     });
 
     // TALENTS

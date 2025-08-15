@@ -48,7 +48,8 @@
 
                     
                     {{-- TOMBOL LOGIN/AUTH --}}
-                    <div class="ml-8 flex items-center">
+                    
+                 <div class="ml-8 flex items-center">
                         @auth
                             {{-- Dropdown saat login --}}
                             <x-dropdown align="right" width="48">
@@ -59,14 +60,20 @@
                                 </x-slot>
                                 <x-slot name="content">
                                     <x-dropdown-link :href="route('profile.edit')">{{ __('Profile') }}</x-dropdown-link>
-                                    <form method="POST" action="{{ route('logout') }}"><@csrf<x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">{{ __('Log Out') }}</x-dropdown-link></form>
+                                    @if(Auth::user() && Auth::user()->isAdmin())
+                                        <x-dropdown-link :href="url('/logadmin')">{{ __('Admin Panel') }}</x-dropdown-link>
+                                    @endif
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <x-dropdown-link :href="route('logout')" onclick="event.preventDefault(); this.closest('form').submit();">{{ __('Log Out') }}</x-dropdown-link>
+                                    </form>
                                 </x-slot>
                             </x-dropdown>
                         @else
                             {{-- Hanya Tombol Login --}}
                             <a href="{{ route('login') }}" class="text-sm font-medium text-gray-400 hover:text-white">Login</a>
                         @endauth
-                    </div>
+                    </div>
                 </div>
 
                 {{-- Hamburger Menu untuk Mobile (tetap terpisah dan paling kanan) --}}
