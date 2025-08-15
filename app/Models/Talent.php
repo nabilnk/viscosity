@@ -9,9 +9,12 @@ class Talent extends Model
 {
     use HasFactory;
 
+    protected $table = 'talents';
+
     protected $fillable = [
         'name',
         'photo',
-        'description'
+        'description',
+        'documentation_photo',
     ];
 }

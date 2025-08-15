@@ -15,6 +15,7 @@ class Event extends Model
         'date',
         'location',
         'city',
-        'asset', // misalnya foto/banner event
+        'flyer_image',
+        'is_published', //tambahkan ini
     ];
 }

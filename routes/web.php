@@ -11,6 +11,8 @@ use App\Http\Controllers\TalentController;
 use App\Http\Controllers\NofreqController;
 use App\Http\Controllers\AssetHomeController;
 use App\Http\Controllers\VVIPController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\TicketController;
 
 
 Route::get('/', [PageController::class, 'home'])->name('home');
@@ -24,9 +26,9 @@ Route::get('/nofreq', [PageController::class, 'nofreq'])->name('nofreq');
 // ==================
 // User Dashboard (Bawaan Breeze)
 // ==================
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// Route::get('/dashboard', function () {
+//     return view('dashboard');
+// })->middleware(['auth', 'verified'])->name('dashboard');
 
 
 // ==================
@@ -59,14 +61,14 @@ Route::middleware(['auth'])->prefix('logadmin')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
 
     // EVENTS
-    Route::prefix('events')->group(function () {
+     Route::prefix('events')->group(function () {
         Route::get('/', [EventController::class, 'index'])->name('admin.events.index');
         Route::get('/create', [EventController::class, 'create'])->name('admin.events.create');
         Route::post('/', [EventController::class, 'store'])->name('admin.events.store');
         Route::get('/{event}/edit', [EventController::class, 'edit'])->name('admin.events.edit');
         Route::put('/{event}', [EventController::class, 'update'])->name('admin.events.update');
         Route::delete('/{event}', [EventController::class, 'destroy'])->name('admin.events.destroy');
-        Route::get('/events/exclusive', [EventController::class, 'exclusive'])->name('admin.events.exclusive');
+        Route::post('/toggle', [EventController::class, 'toggleComingSoon'])->name('admin.events.toggleComingSoon');
     });
 
     // TALENTS
@@ -104,6 +106,9 @@ Route::middleware(['auth'])->prefix('logadmin')->group(function () {
         Route::get('/', [VVIPController::class, 'index'])->name('admin.vvip.index');
         Route::post('/toggle', [VVIPController::class, 'toggle'])->name('admin.vvip.toggle');
     });
+
+    Route::get('/logadmin/users', [UserController::class, 'index'])->name('admin.users.index');
+    Route::get('/logadmin/tickets', [TicketController::class, 'index'])->name('admin.tickets.index');
 });
 
 

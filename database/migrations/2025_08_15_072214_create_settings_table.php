@@ -11,9 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('v_v_i_p_settings', function (Blueprint $table) {
+        Schema::create('settings', function (Blueprint $table) {
             $table->id();
-            $table->boolean('is_active')->default(false);
+            $table->string('key')->unique();
+            $table->text('value')->nullable();
             $table->timestamps();
         });
     }
@@ -23,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('v_v_i_p_settings');
+        Schema::dropIfExists('settings');
     }
 };

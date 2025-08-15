@@ -1,72 +1,68 @@
-<x-admin-layout>
+@extends('layouts.admin')
+@section('content')
+<div class="container mx-auto py-10 max-w-3xl">
+    <h1 class="text-2xl font-bold mb-6">Manage Highlight Videos (NOFREQ)</h1>
 
-<div class="container mx-auto py-10">
-    <div class="flex items-center justify-between mb-6">
-        <h1 class="text-2xl font-bold">NOFREQ (Liveset)</h1>
-        <a href="{{ route('admin.nofreqs.create') }}" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition">
-            + Tambah NOFREQ
-        </a>
-    </div>
-
-    @if (session('success'))
-        <div class="mb-4 p-3 rounded bg-green-600 text-white">{{ session('success') }}</div>
+    {{-- Session status --}}
+    @if(session('success'))
+    <div class="p-3 rounded bg-green-600 text-white mb-6">{{ session('success') }}</div>
     @endif
 
-    <div class="overflow-x-auto bg-gray-800 rounded shadow">
-        <table class="min-w-full text-sm">
-            <thead class="bg-gray-700 text-white">
-                <tr>
-                    <th class="px-4 py-3 text-left">ID</th>
-                    <th class="px-4 py-3 text-left">Judul</th>
-                    <th class="px-4 py-3 text-left">YouTube Link</th>
-                    <th class="px-4 py-3 text-left">Preview</th>
-                    <th class="px-4 py-3 text-left">Aksi</th>
-                </tr>
+    <div class="flex justify-between items-center mb-4">
+        <a href="{{ route('admin.nofreqs.create') }}" class="inline-block bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+            Tambah Video
+        </a>
+        <a href="{{ route('admin.index') }}" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+          Kembali ke halaman admin
+          </a>
+    </div>
+
+    <div class="overflow-x-auto bg-white rounded-lg shadow overflow-y-auto" style="max-height: 64vh;">
+        <table class="min-w-full table-auto">
+            <thead class="justify-between">
+            <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                <th class="py-3 px-6 text-left">Title</th>
+                <th class="py-3 px-6 text-left">Youtube Link</th>
+                <th class="py-3 px-6 text-center">Actions</th>
+            </tr>
             </thead>
-            <tbody class="divide-y divide-gray-700 text-gray-100">
-                @forelse ($nofreqs as $nofreq)
-                    <tr>
-                        <td class="px-4 py-3">{{ $nofreq->id }}</td>
-                        <td class="px-4 py-3">{{ $nofreq->title }}</td>
-                        <td class="px-4 py-3 break-all">
-                            <a href="{{ $nofreq->youtube_link }}" target="_blank" class="text-blue-400 underline">
-                                {{ $nofreq->youtube_link }}
-                            </a>
-                        </td>
-                        <td class="px-4 py-3">
-                            @php
-                                // Ambil video id dari link YouTube umum (watch?v= / youtu.be / embed)
-                                $yt = $nofreq->youtube_link ?? '';
-                                $vid = null;
-                                if (preg_match('~(?:youtu\.be/|youtube\.com/(?:embed/|watch\?v=))([A-Za-z0-9_-]{6,})~', $yt, $m)) {
-                                    $vid = $m[1];
-                                }
-                            @endphp
-                            @if ($vid)
-                                <div class="w-64 aspect-video">
-                                    <iframe class="w-full h-full rounded" src="https://www.youtube.com/embed/{{ $vid }}" title="YouTube video" frameborder="0" allowfullscreen></iframe>
-                                </div>
-                            @else
-                                <span class="text-gray-400">Link tidak valid</span>
-                            @endif
-                        </td>
-                        <td class="px-4 py-3">
-                            <a href="{{ route('admin.nofreqs.edit', $nofreq->id) }}" class="text-blue-400 hover:text-blue-300">Edit</a>
-                            <form action="{{ route('admin.nofreqs.destroy', $nofreq->id) }}" method="POST" class="inline-block ml-3"
+            <tbody class="text-gray-600 text-sm font-light">
+            @forelse($nofreqs as $nofreq)
+                <tr class="border-b border-gray-200 hover:bg-gray-100">
+                    <td class="py-3 px-6 text-left whitespace-nowrap">
+                        <div class="flex items-center">
+                            <span>{{ $nofreq->title }}</span>
+                        </div>
+                    </td>
+                    <td class="py-3 px-6 text-left">
+                        <a href="{{ $nofreq->youtube_link }}" target="_blank" class="text-blue-500 hover:text-blue-700">
+                            {{ $nofreq->youtube_link }}
+                        </a>
+                    </td>
+                    <td class="py-3 px-6 text-center">
+                        <div class="flex item-center justify-center">
+                            <div class="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
+                                <a href="{{ route('admin.nofreqs.edit', $nofreq->id) }}">
+                                    Edit
+                                </a>
+                            </div>
+                              <form action="{{ route('admin.nofreqs.destroy', $nofreq) }}" method="POST"
                                   onsubmit="return confirm('Hapus item ini?')">
                                 @csrf @method('DELETE')
-                                <button type="submit" class="text-red-400 hover:text-red-300">Hapus</button>
-                            </form>
-                        </td>
-                    </tr>
-                @empty
-                    <tr>
-                        <td class="px-4 py-6 text-center text-gray-400" colspan="5">Belum ada data.</td>
-                    </tr>
-                @endforelse
+                               <div class="w-4 mr-2 transform hover:text-purple-500 hover:scale-110">
+                                   <button type="submit">Delete</button>
+                                </div>
+                                </form>
+                        </div>
+                    </td>
+                </tr>
+            @empty
+                <tr>
+                    <td colspan="3" class="py-3 px-6 text-center">Tidak ada data</td>
+                </tr>
+            @endforelse
             </tbody>
         </table>
     </div>
 </div>
-</x-admin-layout>
-
+@endsection

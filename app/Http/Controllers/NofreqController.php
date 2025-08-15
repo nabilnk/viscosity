@@ -22,7 +22,7 @@ class NofreqController extends Controller
     {
         $request->validate([
             'title'=>'required',
-            'youtube_url'=>'required|url',
+            'youtube_link'=>'required|url',
         ]);
 
         Nofreq::create($request->all());
@@ -38,7 +38,7 @@ class NofreqController extends Controller
     {
         $request->validate([
             'title'=>'required',
-            'youtube_url'=>'required|url',
+            'youtube_link'=>'required|url',
         ]);
 
         $nofreq->update($request->all());

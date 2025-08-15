@@ -10,7 +10,7 @@ class AdminUserSeeder extends Seeder
     public function run()
     {
         User::updateOrCreate(
-            ['email' => 'admin@email.com'],
+            ['email' => 'admin@viscosity.com'],
             [
                 'name' => 'Super Admin',
                 'password' => bcrypt('password123'), // ganti sesuai kebutuhan
