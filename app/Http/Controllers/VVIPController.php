@@ -1,36 +1,22 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\Models\VVIPSetting;
 use Illuminate\Http\Request;
 
 class VVIPController extends Controller
 {
-    public function index()
-    {
-        $vvipSetting = VVIPSetting::firstOrCreate([
-            'id' => 1, // Assuming there's only one VVIP setting
-        ], [
-            'is_active' => false, // Default value
-        ]);
-
-        return view('admin.vvip.index', compact('vvipSetting'));
+    public function index() {
+        $setting = VVIPSetting::firstOrCreate(['id' => 1]);
+        return view('admin.vvip.index', compact('setting'));
     }
-
-    public function toggle(Request $request)
-    {
-        $request->validate([
-            'is_active' => 'required|boolean',
+    public function update(Request $request) {
+        $data = $request->validate([
+            'rules' => 'nullable|string',
+            'benefits' => 'nullable|string',
         ]);
-
-        $vvipSetting = VVIPSetting::firstOrCreate(
-             ['id' => 1],
-             ['is_active' => false] 
-        );
-        $vvipSetting->is_active = $request->boolean('is_active');
-        $vvipSetting->save();
-
-        return back()->with('success', 'VVIP Coming Soon status toggled successfully!');
+        $setting = VVIPSetting::firstOrCreate(['id' => 1]);
+        $setting->update($data);
+        return redirect()->route('admin.vvip.index')->with('success', 'Konten VVIP berhasil diperbarui.');
     }
 }
+

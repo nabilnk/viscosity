@@ -40,19 +40,7 @@
 
         </div>
 
-        {{-- Konten Bawah: Achievement --}}
-        <div class="w-full max-w-5xl mx-auto bg-black/40 backdrop-blur-md border border-gray-700/50 rounded-2xl p-8">
-            <h2 class="text-3xl font-bold mb-4">ACHIEVEMENT</h2>
-            <div class="flex justify-between items-end mb-2 text-gray-300">
-                <span class="font-semibold">Your Spending</span>
-                <span>Rp {{ number_format($currentSpending, 0, ',', '.') }} / Rp {{ number_format($targetSpending, 0, ',', '.') }}</span>
-            </div>
-            
-            {{-- Progress Bar --}}
-            <div class="w-full bg-gray-700 rounded-full h-2.5">
-                <div class="bg-red-600 h-2.5 rounded-full" style="width: {{ $progressPercentage }}%"></div>
-            </div>
-        </div>
+
         
     </div>
 </x-app-layout>

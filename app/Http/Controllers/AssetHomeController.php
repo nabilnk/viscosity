@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers; // Atau App\Http\Controllers\Admin
 
 use App\Models\AssetHome;
 use Illuminate\Http\Request;
@@ -10,13 +10,25 @@ class AssetHomeController extends Controller
 {
     public function index(Request $request)
     {
-        $type = $request->get('type', 'track_record'); // Default ke 'track_record'
+        // Tentukan filter yang aktif. Defaultnya adalah 'tra_docs'.
+        $activeFilter = $request->input('filter', 'tra_docs');
 
-        $assets = AssetHome::when($type, function ($query, $type) {
-            $query->where('type', $type);
-        })->get();
+        $query = AssetHome::query();
 
-        return view('admin.assets.index', compact('assets', 'type'));
+        // Logika untuk mengambil data berdasarkan filter
+        if ($activeFilter == 'tra_docs') {
+            // Jika filter adalah 'tra_docs', ambil data 'track_record' DAN 'documentation'
+            $query->whereIn('type', ['track_record', 'documentation']);
+        } else {
+            // Untuk filter lain ('team', 'collaboration'), ambil data sesuai tipenya
+            $query->where('type', $activeFilter);
+        }
+
+        // Urutkan berdasarkan tipe (agar track_record dan documentation terkelompok) lalu tanggal
+        $assets = $query->orderBy('type')->orderBy('created_at', 'desc')->get();
+
+        // Kirim data aset yang sudah difilter dan nama filter yang aktif ke view
+        return view('admin.assets.index', compact('assets', 'activeFilter'));
     }
 
     public function create()
@@ -26,86 +38,57 @@ class AssetHomeController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'type' => 'required|in:track_record,documentation,our_team',
+        $data = $request->validate([
+            'type' => 'required|in:track_record,documentation,team,collaboration',
+            'image' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048',
             'name' => 'nullable|string|max:255',
             'position' => 'nullable|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'documentation' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        // Upload dan simpan gambar
-        $imagePath = null;
         if ($request->hasFile('image')) {
-            $imagePath = Storage::disk('public')->put('assets', $request->file('image'));
-        }
-          // Upload dan simpan documentation
-        $docPath = null;
-        if ($request->hasFile('documentation')) {
-            $docPath = Storage::disk('public')->put('assets', $request->file('documentation'));
+            $path = $request->file('image')->store('public/assets_home');
+            $data['image'] = basename($path);
         }
 
+        AssetHome::create($data);
 
-        AssetHome::create([
-            'type' => $request->type,
-            'name' => $request->name,
-            'position' => $request->position,
-            'image' => $imagePath, // Simpan path ke database
-            'documentation' => $docPath // Simpan path ke database
-        ]);
-
-        return redirect()->route('admin.assets.index')
-                        ->with('success','Berhasil Ditambahkan.');
+        return redirect()->route('admin.assets.index')->with('success', 'Aset baru berhasil ditambahkan.');
     }
 
     public function edit(AssetHome $asset)
     {
-         return view('admin.assets.edit',compact('asset'));
+        return view('admin.assets.edit', compact('asset'));
     }
+
     public function update(Request $request, AssetHome $asset)
     {
-        $request->validate([
-            'type' => 'required|in:track_record,documentation,our_team',
+        $data = $request->validate([
+            'type' => 'required|in:track_record,documentation,team,collaboration',
+            'image' => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
             'name' => 'nullable|string|max:255',
             'position' => 'nullable|string|max:255',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-              'documentation' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
-       $assetData = $request->except(['image','documentation']);
-         // Proses upload gambar (jika ada)
+
         if ($request->hasFile('image')) {
-            // Hapus gambar lama (jika ada)
             if ($asset->image) {
-                Storage::disk('public')->delete($asset->image);
+                Storage::delete('public/assets_home/' . $asset->image);
             }
-           $assetData['image'] = $request->file('image')->store('assets', 'public');
-        }
-        if ($request->hasFile('documentation')) {
-            // Hapus gambar lama (jika ada)
-            if ($asset->documentation) {
-                Storage::disk('public')->delete($asset->documentation);
-            }
-           $assetData['documentation'] = $request->file('documentation')->store('assets', 'public');
+            $path = $request->file('image')->store('public/assets_home');
+            $data['image'] = basename($path);
         }
 
-       
+        $asset->update($data);
 
-        $asset->update($assetData);
-         return redirect()->route('admin.assets.index')
-                        ->with('success','Berhasil Diubah');
+        return redirect()->route('admin.assets.index')->with('success', 'Aset berhasil diperbarui.');
     }
-     public function destroy(AssetHome $asset)
+
+    public function destroy(AssetHome $asset)
     {
-          if ($asset->image) {
-            Storage::disk('public')->delete($asset->image);
+        if ($asset->image) {
+            Storage::delete('public/assets_home/' . $asset->image);
         }
-
-         if ($asset->documentation) {
-            Storage::disk('public')->delete($asset->documentation);
-        }
+        
         $asset->delete();
-
-        return redirect()->route('admin.assets.index')
-                        ->with('success','Berhasil Dihapus');
+        return redirect()->route('admin.assets.index')->with('success', 'Aset berhasil dihapus.');
     }
 }

@@ -9,14 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
-    {
+    public function up() {
         Schema::create('talents', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            $table->string('photo')->nullable(); // Path ke foto talent
-            $table->text('description')->nullable(); // Deskripsi talent
-            $table->string('documentation_photo')->nullable(); // Path ke foto dokumentasi
+            $table->string('photo')->nullable();
+            $table->text('description')->nullable();
+            $table->string('documentation_photo')->nullable();
             $table->timestamps();
         });
     }

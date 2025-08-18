@@ -1,44 +1,46 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="py-12">
-        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <div class="p-6 text-gray-900">
-                    <div class="container mx-auto p-6">
-                        <h1 class="text-xl font-bold mb-6">Tambah Talent</h1>
-                        <form action="{{ route('admin.talents.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
-                            @csrf
-
-                            <div>
-                                <label class="block text-gray-700 text-sm font-bold mb-2" for="name">Nama Talent</label>
-                                <input type="text" name="name" id="name" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
-                            </div>
-
-                            <div>
-                                <label class="block text-gray-700 text-sm font-bold mb-2" for="photo">Foto Talent</label>
-                                <input type="file" name="photo" id="photo" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                            </div>
-
-                            <div>
-                                <label class="block text-gray-700 text-sm font-bold mb-2" for="documentation_photo">Foto Dokumentasi</label>
-                                 <input type="file" name="documentation_photo" id="documentation_photo" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                             </div>
-                            <div>
-                                <label class="block text-gray-700 text-sm font-bold mb-2" for="description">Deskripsi</label>
-                                <textarea name="description" id="description" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required></textarea>
-                            </div>
-
-                            <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
-                                Simpan
-                            </button>
-                              <a href="{{ route('admin.talents.index') }}" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
-                                  Cancel
-                                </a>
-                        </form>
-                    </div>
-                </div>
+<div class="container mx-auto px-6 py-8">
+    <div class="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700">
+        <h1 class="text-2xl font-bold text-white mb-6">Tambah Talent Baru</h1>
+        <form method="POST" action="{{ route('admin.talents.store') }}" enctype="multipart/form-data">
+            @csrf
+            
+            <!-- Nama Talent -->
+            <div class="mb-4">
+                <label for="name" class="block font-medium text-sm text-gray-300">Nama Talent</label>
+                <input id="name" name="name" type="text" class="mt-1 block w-full bg-gray-700 border-gray-600 text-white rounded-md shadow-sm" required value="{{ old('name') }}">
+                @error('name') <p class="text-sm text-red-400 mt-2">{{ $message }}</p> @enderror
             </div>
-        </div>
+
+            <!-- Deskripsi -->
+            <div class="mb-4">
+                <label for="description" class="block font-medium text-sm text-gray-300">Deskripsi Singkat</label>
+                <textarea id="description" name="description" rows="4" class="mt-1 block w-full bg-gray-700 border-gray-600 text-white rounded-md shadow-sm">{{ old('description') }}</textarea>
+                @error('description') <p class="text-sm text-red-400 mt-2">{{ $message }}</p> @enderror
+            </div>
+            
+            <!-- Foto Utama (Profil) -->
+            <div class="mb-4">
+                <label for="photo" class="block font-medium text-sm text-gray-300">Foto Utama (untuk slider)</label>
+                <input id="photo" name="photo" type="file" class="mt-1 block w-full text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700" required>
+                @error('photo') <p class="text-sm text-red-400 mt-2">{{ $message }}</p> @enderror
+            </div>
+
+            <!-- Foto Dokumentasi (Detail) -->
+            <div class="mb-6">
+                <label for="documentation_photo" class="block font-medium text-sm text-gray-300">Foto Dokumentasi (untuk detail)</label>
+                <input id="documentation_photo" name="documentation_photo" type="file" class="mt-1 block w-full text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700" required>
+                @error('documentation_photo') <p class="text-sm text-red-400 mt-2">{{ $message }}</p> @enderror
+            </div>
+
+            <!-- Tombol Aksi -->
+            <div class="flex items-center space-x-4 mt-6">
+                <button type="submit" class="bg-green-500 hover:bg-green-600 text-white font-bold px-5 py-2 rounded-lg">Simpan Talent</button>
+                <a href="{{ route('admin.talents.index') }}" class="text-gray-400 hover:text-white">Batal</a>
+            </div>
+        </form>
     </div>
+</div>
 @endsection

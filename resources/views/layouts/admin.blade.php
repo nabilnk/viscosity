@@ -79,19 +79,29 @@
                         <ul x-show="open" x-cloak x-transition
                             class="mt-1 ms-9 space-y-1 border-s-l border-slate-200 dark:border-slate-700 ps-3">
                             <li><a href="{{ route('admin.assets.index') }}"
-                                   class="block rounded-lg px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 {{ request()->routeIs('admin.assets.*') ? 'bg-slate-100 dark:bg-slate-700/70 font-semibold' : '' }}">Asset Home</a></li>
+                                   class="block rounded-lg px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 {{ request()->routeIs('admin.assets.*') ? 'bg-slate-100 dark:bg-slate-700/70 font-semibold' : '' }}">
+                                   Asset Home</a></li>
                             <li><a href="{{ route('admin.events.index') }}"
-                                   class="block rounded-lg px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 {{ request()->routeIs('admin.events.*') ? 'bg-slate-100 dark:bg-slate-700/70 font-semibold' : '' }}">Events</a></li>
+                                   class="block rounded-lg px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 {{ request()->routeIs('admin.events.*') ? 'bg-slate-100 dark:bg-slate-700/70 font-semibold' : '' }}">
+                                   Events</a></li>
                             <li><a href="{{ route('admin.talents.index') }}"
-                                   class="block rounded-lg px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 {{ request()->routeIs('admin.talents.*') ? 'bg-slate-100 dark:bg-slate-700/70 font-semibold' : '' }}">Talents</a></li>
+                                   class="block rounded-lg px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 {{ request()->routeIs('admin.talents.*') ? 'bg-slate-100 dark:bg-slate-700/70 font-semibold' : '' }}">
+                                   Talents</a></li>
                             <li><a href="{{ route('admin.nofreqs.index') }}"
-                                   class="block rounded-lg px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 {{ request()->routeIs('admin.nofreqs.*') ? 'bg-slate-100 dark:bg-slate-700/70 font-semibold' : '' }}">NOFREQ</a></li>
-                            <li><a href="{{ route('admin.tickets.index') }}"
-                                   class="block rounded-lg px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 {{ request()->routeIs('admin.tickets.*') ? 'bg-slate-100 dark:bg-slate-700/70 font-semibold' : '' }}">Ticketing</a></li>
+                                   class="block rounded-lg px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 {{ request()->routeIs('admin.nofreqs.*') ? 'bg-slate-100 dark:bg-slate-700/70 font-semibold' : '' }}">
+                                   NOFREQ</a></li>
+                            <li><a href="{{ route('admin.transactions.index') }}"
+                                   class="block rounded-lg px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 {{ request()->routeIs('admin.tickets.*') ? 'bg-slate-100 dark:bg-slate-700/70 font-semibold' : '' }}">
+                                   Manajemen Transaksi</a></li>
                             <li><a href="{{ route('admin.vvip.index') }}"
-                                   class="block rounded-lg px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 {{ request()->routeIs('admin.vvip.*') ? 'bg-slate-100 dark:bg-slate-700/70 font-semibold' : '' }}">VVIP</a></li>
+                                   class="block rounded-lg px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 {{ request()->routeIs('admin.vvip.*') ? 'bg-slate-100 dark:bg-slate-700/70 font-semibold' : '' }}">
+                                   VVIP</a></li>
                             <li><a href="{{ route('admin.users.index') }}"
-                                   class="block rounded-lg px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 {{ request()->routeIs('admin.users.*') ? 'bg-slate-100 dark:bg-slate-700/70 font-semibold' : '' }}">Kelola Pengguna</a></li>
+                                   class="block rounded-lg px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 {{ request()->routeIs('admin.users.*') ? 'bg-slate-100 dark:bg-slate-700/70 font-semibold' : '' }}">
+                                   Kelola Pengguna</a></li>
+                            <li><a href="{{ route('admin.settings.index') }}"
+                                   class="block rounded-lg px-3 py-2 text-sm hover:bg-slate-100 dark:hover:bg-slate-700 {{ request()->routeIs('admin.settings.*') ? 'bg-slate-100 dark:bg-slate-700/70 font-semibold' : '' }}">
+                                   Setting</a></li>
                         </ul>
                     </li>
                 </ul>

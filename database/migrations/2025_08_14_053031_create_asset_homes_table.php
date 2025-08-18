@@ -9,15 +9,16 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
         Schema::create('asset_homes', function (Blueprint $table) {
             $table->id();
-            $table->enum('type', ['track_record', 'our_team'])->default('track_record');
-            $table->string('name')->nullable();
-            $table->string('position')->nullable();
-            $table->string('image')->nullable();
-            $table->string('documentation')->nullable(); 
+            // Tipe aset: 'track_record', 'documentation', 'team', 'collaboration'
+            $table->enum('type', ['track_record', 'documentation', 'team', 'collaboration']);
+            $table->string('image'); // Path gambar
+            $table->string('name')->nullable(); // Untuk nama anggota tim / nama partner
+            $table->string('position')->nullable(); // Untuk jabatan anggota tim (jika type='team')
+            $table->string('url')->nullable(); // Untuk link partner (jika type='collaboration')
             $table->timestamps();
         });
     }

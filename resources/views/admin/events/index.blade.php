@@ -1,97 +1,100 @@
 @extends('layouts.admin')
+
 @section('content')
-    <div class="container mx-auto p-6">
-                @if(session('success'))
-            <div 
-                x-data="{ show: true }" 
-                x-init="setTimeout(() => show = false, 3000)" 
-                x-show="show"
-                class="mb-4 p-4 rounded-lg bg-green-100 text-green-800 border border-green-300"
-            >
-                {{ session('success') }}
-            </div>
-                @endif
+<div class="container mx-auto px-6 py-8">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-white">Daftar Events</h1>
+        <a href="{{ route('admin.events.create') }}" class="inline-block bg-green-500 hover:bg-green-600 text-white font-bold px-4 py-2 rounded-lg">Tambah Event Baru</a>
+    </div>
 
-        <h1 class="text-2xl font-bold mb-6">Daftar Events</h1>
-        <a href="{{ route('admin.index') }}" class="inline-block bg-blue-500 hover:bg-blue-700 text-white px-4 py-2 rounded mb-4">
-            Kembali ke Dashboard
-        </a>
-        <a href="{{ route('admin.events.create') }}" class="inline-block bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">
-            Tambah Event Baru
-        </a>
-
-        {{-- Filter --}}
-        <div class="mb-4 flex justify-between items-center">
-            <form action="{{ route('admin.events.index') }}" method="GET">
-                <label for="type" class="mr-2">Filter Type:</label>
-                <select name="type" id="type" class="shadow appearance-none border rounded w-auto py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" onchange="this.form.submit()">
-                    <option value="" {{ request('type') == '' ? 'selected' : '' }}>All</option>
+    <!-- FORM FILTER -->
+    <div class="bg-gray-800 p-4 rounded-lg shadow-md mb-6 border border-gray-700">
+        <form action="{{ route('admin.events.index') }}" method="GET" class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+            
+            <!-- Filter by Type -->
+            <div>
+                <label for="type" class="block text-sm font-medium text-gray-300">Tipe Event</label>
+                <select name="type" id="type" class="mt-1 block w-full py-2 px-3 border border-gray-600 bg-gray-700 text-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <option value="">Semua Tipe</option>
                     <option value="monthly" {{ request('type') == 'monthly' ? 'selected' : '' }}>Monthly</option>
                     <option value="exclusive" {{ request('type') == 'exclusive' ? 'selected' : '' }}>Exclusive</option>
                 </select>
-            </form>
+            </div>
 
-            {{-- Slide Switch (Coming Soon) --}}
-            @if(request('type') == 'exclusive')
-                <form method="POST" action="{{ route('admin.events.toggleComingSoon') }}">
-                    @csrf
-                    <label class="flex items-center cursor-pointer">
-                        <input type="checkbox" name="is_coming_soon" class="sr-only peer"
-                            onchange="this.form.submit()" {{ $isComingSoon ? 'checked' : '' }}>
-                        <div class="relative w-11 h-6 bg-gray-200 rounded-full peer dark:bg-gray-700
-                                    peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800
-                                    peer-checked:after:translate-x-full peer-checked:after:border-white
-                                    after:content-[''] after:absolute after:top-0.5 after:left-[2px]
-                                    after:bg-white after:border-gray-300 after:border after:rounded-full
-                                    after:h-5 after:w-5 after:transition-all dark:border-gray-600
-                                    peer-checked:bg-blue-600"></div>
-                        <span class="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">Coming Soon</span>
-                    </label>
-                </form>
-            @endif
-        </div>
+            <!-- Filter by Status -->
+            <div>
+                <label for="status" class="block text-sm font-medium text-gray-300">Status Publikasi</label>
+                <select name="status" id="status" class="mt-1 block w-full py-2 px-3 border border-gray-600 bg-gray-700 text-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <option value="">Semua Status</option>
+                    <option value="published" {{ request('status') == 'published' ? 'selected' : '' }}>Published</option>
+                    <option value="coming_soon" {{ request('status') == 'coming_soon' ? 'selected' : '' }}>Coming Soon</option>
+                </select>
+            </div>
 
-        <table class="w-full mt-6 border">
-            <thead>
-                <tr class="bg-gray-200">
-                    <th class="border px-4 py-2">Title</th>
-                    <th class="border px-4 py-2">Type</th>
-                    <th class="border px-4 py-2">Date</th>
-                    <th class="border px-4 py-2">Location</th>
-                    <th class="border px-4 py-2">City</th>
-                    <th class="border px-4 py-2">Flyer Image</th>
-                    <th class="border px-4 py-2">Status</th> {{-- COMING SOON --}}
-                    <th class="px-4 py-2">Actions</th>
+            <!-- Filter by Period -->
+            <div>
+                <label for="period" class="block text-sm font-medium text-gray-300">Periode Waktu</label>
+                <select name="period" id="period" class="mt-1 block w-full py-2 px-3 border border-gray-600 bg-gray-700 text-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm">
+                    <option value="">Semua Waktu</option>
+                    <option value="upcoming" {{ request('period') == 'upcoming' ? 'selected' : '' }}>Upcoming</option>
+                    <option value="past" {{ request('period') == 'past' ? 'selected' : '' }}>Past</option>
+                </select>
+            </div>
+
+            <!-- Tombol Aksi -->
+            <div class="flex space-x-2">
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold px-4 py-2 rounded-lg">Filter</button>
+                <a href="{{ route('admin.events.index') }}" class="w-full text-center bg-gray-600 hover:bg-gray-700 text-white font-bold px-4 py-2 rounded-lg">Reset</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Tabel Data Event -->
+    <div class="bg-gray-800 rounded-lg shadow-md border border-gray-700 overflow-hidden">
+        <table class="w-full">
+            <thead class="bg-gray-700">
+                <tr>
+                    <th class="text-left text-white px-6 py-3">Nama Event</th>
+                    <th class="text-left text-white px-6 py-3">Tipe</th>
+                    <th class="text-left text-white px-6 py-3">Tanggal</th>
+                    <th class="text-left text-white px-6 py-3">Harga</th>
+                    <th class="text-left text-white px-6 py-3">Status</th>
+                    <th class="text-center text-white px-6 py-3">Aksi</th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach($events as $event)
-                <tr>
-                    <td class="border px-4 py-2">{{ $event->title }}</td>
-                    <td class="border px-4 py-2">{{ $event->type }}</td>
-                    <td class="border px-4 py-2">{{ $event->date }}</td>
-                    <td class="border px-4 py-2">{{ $event->location }}</td>
-                    <td class="border px-4 py-2">{{ $event->city }}</td>
-                    <td class="border px-4 py-2">
-                      @if($event->flyer_image)
-                            <img src="{{ asset('storage/' . $event->flyer_image) }}" alt="Event Image" style="max-width: 100px; max-height: 100px;">
+            <tbody class="text-gray-300">
+                @forelse($events as $event)
+                <tr class="border-b border-gray-700 hover:bg-gray-700/50">
+                    <td class="px-6 py-4">{{ $event->nama_event }}</td>
+                    <td class="px-6 py-4 capitalize">{{ $event->type }}</td>
+                    <td class="px-6 py-4">{{ \Carbon\Carbon::parse($event->tanggal_event)->format('d M Y, H:i') }}</td>
+                    <td class="px-6 py-4">Rp {{ number_format($event->harga_tiket) }}</td>
+                    <td class="px-6 py-4">
+                        @if($event->is_coming_soon)
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-500 text-yellow-900">
+                                Coming Soon
+                            </span>
                         @else
-                             No Image
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-500 text-green-900">
+                                Published
+                            </span>
                         @endif
-                      </td>
-                    <td class="border px-4 py-2">
-                        {{ $event->is_published ? 'Published' : 'Coming Soon' }}
                     </td>
-                    <td class="border px-4 py-2 flex space-x-2">
-                        <a href="{{ route('admin.events.edit', $event) }}" class="bg-yellow-500 text-white px-2 py-1 rounded">Edit</a>
-                        <form action="{{ route('admin.events.destroy', $event) }}" method="POST" onsubmit="return confirm('Hapus event?')">
+                    <td class="px-6 py-4 flex space-x-2 justify-center">
+                        <a href="{{ route('admin.events.edit', $event->id) }}" class="bg-yellow-500 hover:bg-yellow-600 text-white px-3 py-1 rounded-md">Edit</a>
+                        <form action="{{ route('admin.events.destroy', $event->id) }}" method="POST" onsubmit="return confirm('Hapus event?')">
                             @csrf @method('DELETE')
-                            <button class="bg-red-600 text-white px-2 py-1 rounded">Hapus</button>
+                            <button class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded-md">Hapus</button>
                         </form>
                     </td>
                 </tr>
-                @endforeach
+                @empty
+                <tr>
+                    <td colspan="6" class="text-center text-gray-400 p-6">Tidak ada event yang cocok dengan filter yang dipilih.</td>
+                </tr>
+                @endforelse
             </tbody>
         </table>
     </div>
+</div>
 @endsection

@@ -6,33 +6,33 @@
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 
                 @forelse($events as $event)
-                    @if($event->type === "exclusive" && $event->is_published)
-                        <div class="bg-zinc-900/80 rounded-2xl overflow-hidden flex flex-col">
-                            
-                            {{-- Flyer Event --}}
-                            <img src="{{ asset('storage/'.$event->flyer) }}" 
-                                 alt="{{ $event->title }}" 
-                                 class="w-full h-64 object-cover">
+                    <div class="bg-zinc-900/80 rounded-2xl overflow-hidden flex flex-col">
+                        
+                        {{-- Flyer Event Dinamis --}}
+                        <img src="{{ asset('storage/events/'.$event->gambar) }}" 
+                             alt="{{ $event->nama_event }}" 
+                             class="w-full h-80 object-cover">
 
-                            <div class="p-6 flex-grow flex flex-col justify-between">
-                                <div>
-                                    <p class="font-semibold text-lg">
-                                        {{ \Carbon\Carbon::parse($event->date)->format('d-m-Y') }}
-                                    </p>
-                                    <p class="text-gray-400">at {{ $event->venue }}</p>
-                                    <p class="text-gray-400">{{ $event->city }}</p>
-                                </div>
-
-                                {{-- Tombol Buy Ticket --}}
-                                <a href="{{ route('event.pay', ['event' => $event->id]) }}" 
-                                   class="mt-4 bg-purple-600 text-white w-full py-3 rounded-lg text-center font-bold hover:bg-purple-700 transition-colors">
-                                    BUY TICKET
-                                </a>
+                        <div class="p-6 flex-grow flex flex-col justify-between">
+                            <div>
+                                {{-- Tanggal, Lokasi, dan Kota Dinamis --}}
+                                <p class="font-semibold text-lg text-white">
+                                    {{ \Carbon\Carbon::parse($event->tanggal_event)->format('d F Y') }}
+                                </p>
+                                <p class="text-gray-400">at {{ $event->lokasi }}</p>
                             </div>
+
+                            {{-- Tombol Buy Ticket Dinamis --}}
+                            <a href="{{ route('event.detail', $event->id) }}" class="mt-4 bg-purple-600 text-white w-full py-3 rounded-lg text-center font-bold hover:bg-purple-700 transition-colors">
+                                BUY TICKET
+                            </a>
                         </div>
-                    @endif
+                    </div>
                 @empty
-                    <p class="text-white text-center col-span-3">No exclusive events available.</p>
+                    {{-- Pesan jika tidak ada event --}}
+                    <p class="text-white text-center col-span-3 text-xl">
+                        Tidak ada event eksklusif yang tersedia saat ini. Nantikan segera!
+                    </p>
                 @endforelse
 
             </div>

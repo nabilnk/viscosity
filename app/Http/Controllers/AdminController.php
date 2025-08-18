@@ -2,41 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use App\Models\Event;
-use App\Models\Talent;
-use App\Models\Nofreq;
 use App\Models\User;
-use App\Models\AssetHome;
-use Illuminate\Support\Facades\Storage;
+use App\Models\Event;
+use App\Models\Transaction;
+use Illuminate\Http\Request;
 
 class AdminController extends Controller
 {
+    /**
+     * Menampilkan halaman utama admin panel (dashboard).
+     */
     public function index()
     {
-        $users = User::all();
-         $assets = AssetHome::all();
-        return view('admin.index', compact('users','assets'));
-    }
-     // Events CRUD METHODS
-    public function eventsCreate()
-    {
-        return view('admin.events.create');
-    }
-        //Tambahkan kode dibawah ini, karena kodenya belum ada
-   public function assetsIndex()
-    {
-        $assets = AssetHome::all();
-        return view('admin.assets.index', compact('assets'));
-    }
+        // Card Statistik
+        $totalUsers = User::count();
+        $totalOrders = Transaction::where('status_pembayaran', 'paid')->count();
+        $totalRevenue = Transaction::where('status_pembayaran', 'paid')->sum('total_harga');
+        $activeEvents = Event::where('is_coming_soon', false)
+                             ->where('tanggal_event', '>=', now())
+                             ->count();
 
-    public function assetsCreate()
-    {
-        return view('admin.assets.create');
-    }
+        // Tabel Transaksi Terbaru (Recent Orders)
+        $recentOrders = Transaction::with(['user', 'event'])
+                                   ->orderBy('created_at', 'desc')
+                                   ->limit(5)
+                                   ->get();
 
-    public function assetsEdit(AssetHome $asset)
-    {
-        return view('admin.assets.edit', compact('asset'));
+        // Kirim semua data ke view
+        return view('admin.index', [
+            'totalUsers' => $totalUsers,
+            'totalOrders' => $totalOrders,
+            'totalRevenue' => $totalRevenue,
+            'activeEvents' => $activeEvents,
+            'recentOrders' => $recentOrders,
+        ]);
     }
 }

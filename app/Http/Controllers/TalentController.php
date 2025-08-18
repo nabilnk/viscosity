@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Models\Talent;
@@ -8,122 +7,54 @@ use Illuminate\Support\Facades\Storage;
 
 class TalentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index() 
     {
-        $talents = Talent::all();
+        $talents = Talent::orderBy('name')->get();
         return view('admin.talents.index', compact('talents'));
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('admin.talents.create');
+    public function create() 
+    { 
+        return view('admin.talents.create'); 
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(Request $request) 
     {
-        $request->validate([
+        $data = $request->validate([
             'name' => 'required|string|max:255',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:1024',
+            'photo' => 'required|image|max:2048',
             'description' => 'nullable|string',
-            'documentation_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:1024',
+            'documentation_photo' => 'required|image|max:2048',
         ]);
-
-        $photoPath = null;
+        $data['photo'] = $request->file('photo')->store('public/talents');
+        $data['documentation_photo'] = $request->file('documentation_photo')->store('public/talents');
+        Talent::create($data);
+        return redirect()->route('admin.talents.index')->with('success', 'Talent baru berhasil dibuat.');
+    }
+    public function edit(Talent $talent) 
+    { 
+        return view('admin.talents.edit', compact('talent')); 
+    
+    }
+    public function update(Request $request, Talent $talent) 
+    {
+        $data = $request->validate([ 'name' => 'required|string|max:255', 'description' => 'nullable|string', 'photo' => 'nullable|image|max:2048', 'documentation_photo' => 'nullable|image|max:2048' ]);
         if ($request->hasFile('photo')) {
-            $photoPath = $request->file('photo')->store('talents', 'public');
+            if ($talent->photo) Storage::delete($talent->photo);
+            $data['photo'] = $request->file('photo')->store('public/talents');
         }
-
-        $documentationPhotoPath = null;
         if ($request->hasFile('documentation_photo')) {
-            $documentationPhotoPath = $request->file('documentation_photo')->store('talents', 'public');
+            if ($talent->documentation_photo) Storage::delete($talent->documentation_photo);
+            $data['documentation_photo'] = $request->file('documentation_photo')->store('public/talents');
         }
-
-        Talent::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'photo' => $photoPath,
-            'documentation_photo' => $documentationPhotoPath,
-        ]);
-
-        return redirect()->route('admin.talents.index')->with('success', 'Talent created successfully!');
+        $talent->update($data);
+        return redirect()->route('admin.talents.index')->with('success', 'Talent berhasil diperbarui.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(Talent $talent)
+    public function destroy(Talent $talent) 
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Talent $talent)
-    {
-        return view('admin.talents.edit', compact('talent'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Talent $talent)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:1024',
-            'documentation_photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:1024',
-        ]);
-
-        $photoPath = $talent->photo;
-        $documentationPhotoPath = $talent->documentation_photo;
-
-        if ($request->hasFile('photo')) {
-            Storage::disk('public')->delete($talent->photo);
-            $photoPath = $request->file('photo')->store('talents', 'public');
-        }
-
-        if ($request->hasFile('documentation_photo')) {
-            Storage::disk('public')->delete($talent->documentation_photo);
-            $documentationPhotoPath = $request->file('documentation_photo')->store('talents', 'public');
-        }
-
-        $talent->update([
-            'name' => $request->name,
-            'description' => $request->description,
-            'photo' => $photoPath,
-            'documentation_photo' => $documentationPhotoPath,
-        ]);
-
-        return redirect()->route('admin.talents.index')->with('success', 'Talent updated successfully!');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Request $request, Talent $talent)
-    {
-        // Hapus foto utama (jika ada)
-        if ($talent->photo) {
-          Storage::disk('public')->delete($talent->photo);
-        }
-        // Hapus foto dokumentasi (jika ada)
-        if ($talent->documentation_photo) {
-            Storage::disk('public')->delete($talent->documentation_photo);
-        }
-
+        if ($talent->photo) Storage::delete($talent->photo);
+        if ($talent->documentation_photo) Storage::delete($talent->documentation_photo);
         $talent->delete();
-
-        return redirect()->route('admin.talents.index')->with('success', 'Talent deleted successfully!');
+        return redirect()->route('admin.talents.index')->with('success', 'Talent berhasil dihapus.');
     }
 }

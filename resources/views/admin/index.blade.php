@@ -1,137 +1,87 @@
 @extends('layouts.admin')
 
 @section('content')
-    {{-- Page title --}}
-    <div class="mb-6 flex items-center justify-between gap-3">
+<div class="px-6 py-8">
+    <div class="flex justify-between items-center">
         <div>
-            <h1 class="text-xl sm:text-2xl font-semibold">Dashboard</h1>
-            <p class="text-slate-500 dark:text-slate-400 text-sm">Ringkasan aktivitas terbaru</p>
+            <h1 class="text-2xl font-bold text-white">Dashboard</h1>
+            <p class="text-gray-400">Ringkasan aktivitas terbaru</p>
         </div>
-        <div class="flex gap-2">
-            <a href="{{ route('admin.events.create') ?? '#' }}"
-               class="rounded-xl bg-indigo-600 px-4 py-2 text-sm font-semibold text-white hover:bg-indigo-500">
-                + New Event
-            </a>
+        <a href="{{ route('admin.events.create') }}" class="inline-block bg-green-500 hover:bg-green-600 text-white font-bold px-4 py-2 rounded-lg">
+            + New Event
+        </a>
+    </div>
+
+    <!-- KARTU STATISTIK -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-6">
+        <!-- Card: Users -->
+        <div class="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700">
+            <p class="text-sm font-medium text-gray-400">Users</p>
+            <p class="text-3xl font-bold text-white mt-2">{{ number_format($totalUsers) }}</p>
+        </div>
+        <!-- Card: Orders -->
+        <div class="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700">
+            <p class="text-sm font-medium text-gray-400">Orders (Paid)</p>
+            <p class="text-3xl font-bold text-white mt-2">{{ number_format($totalOrders) }}</p>
+        </div>
+        <!-- Card: Revenue -->
+        <div class="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700">
+            <p class="text-sm font-medium text-gray-400">Revenue</p>
+            <p class="text-3xl font-bold text-white mt-2">Rp {{ number_format($totalRevenue, 0, ',', '.') }}</p>
+        </div>
+        <!-- Card: Active Events -->
+        <div class="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700">
+            <p class="text-sm font-medium text-gray-400">Active Events</p>
+            <p class="text-3xl font-bold text-white mt-2">{{ $activeEvents }}</p>
         </div>
     </div>
 
-    {{-- Stats --}}
-    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
-        @php
-            $stats = [
-                ['label'=>'Customers','value'=>'3,782','delta'=>'+11.0%'],
-                ['label'=>'Orders','value'=>'5,359','delta'=>'-9.0%'],
-                ['label'=>'Revenue','value'=>'$20K','delta'=>'+4.3%'],
-                ['label'=>'Active Events','value'=>'12','delta'=>'+2'],
-            ];
-        @endphp
-
-        @foreach ($stats as $s)
-            <div class="rounded-2xl border border-slate-200 bg-white p-4 dark:border-slate-700 dark:bg-slate-800">
-                <div class="flex items-start justify-between">
-                    <p class="text-sm text-slate-500 dark:text-slate-400">{{ $s['label'] }}</p>
-                    <span class="text-xs rounded-full px-2 py-0.5
-                         {{ str_starts_with($s['delta'],'-') ? 'bg-red-100 text-red-600 dark:bg-red-900/20' : 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/20' }}">
-                        {{ $s['delta'] }}
-                    </span>
-                </div>
-                <p class="mt-2 text-2xl font-semibold">{{ $s['value'] }}</p>
-            </div>
-        @endforeach
-    </div>
-
-    {{-- Charts row --}}
-    <div class="mt-6 grid grid-cols-1 xl:grid-cols-3 gap-4">
-        {{-- Monthly Sales (simple bars) --}}
-        <div class="xl:col-span-2 rounded-2xl border border-slate-200 bg-white p-5
-                    dark:border-slate-700 dark:bg-slate-800">
-            <div class="flex items-center justify-between">
-                <h3 class="font-semibold">Monthly Sales</h3>
-                <span class="text-xs text-slate-500 dark:text-slate-400">Jan → Dec</span>
-            </div>
-
-            {{-- Simple CSS bars (no lib) --}}
-            @php $values = [120,360,180,300,210,260,100,230,320,250,90,140]; $max = 400; @endphp
-            <div class="mt-6 h-56 flex items-end gap-2">
-                @foreach($values as $v)
-                    <div class="flex-1 rounded-t-md bg-indigo-500/70 dark:bg-indigo-400/80"
-                         style="height: {{ max(4, intval($v / $max * 100)) }}%">
-                    </div>
-                @endforeach
-            </div>
+    <!-- TABEL RECENT ORDERS -->
+    <div class="mt-8">
+        <div class="flex justify-between items-center mb-4">
+            <h2 class="text-xl font-semibold text-white">Recent Orders</h2>
+            <a href="{{ route('admin.transactions.index') }}" class="text-indigo-400 hover:text-indigo-300 text-sm font-medium">View all</a>
         </div>
-
-        {{-- Monthly Target (progress ring) --}}
-        <div class="rounded-2xl border border-slate-200 bg-white p-5
-                    dark:border-slate-700 dark:bg-slate-800">
-            <h3 class="font-semibold">Monthly Target</h3>
-            <div class="mt-4 grid place-items-center">
-                @php $pct = 75.55; @endphp
-                <div class="relative h-44 w-44">
-                    <svg class="h-44 w-44 -rotate-90" viewBox="0 0 100 100">
-                        <circle cx="50" cy="50" r="40" stroke="currentColor"
-                                class="text-slate-300 dark:text-slate-600" stroke-width="12" fill="none"/>
-                        <circle cx="50" cy="50" r="40" stroke="currentColor"
-                                class="text-indigo-500" stroke-width="12" fill="none"
-                                stroke-linecap="round"
-                                stroke-dasharray="251.2"
-                                stroke-dashoffset="{{ 251.2 - (251.2 * $pct / 100) }}"/>
-                    </svg>
-                    <div class="absolute inset-0 grid place-items-center text-center">
-                        <div class="text-2xl font-bold">{{ number_format($pct, 2) }}%</div>
-                        <div class="text-xs text-slate-500 dark:text-slate-400">of target</div>
-                    </div>
-                </div>
-                <p class="mt-3 text-sm text-center text-slate-500 dark:text-slate-400">
-                    Keep up your good work!
-                </p>
-            </div>
-        </div>
-    </div>
-
-    {{-- Table --}}
-    <div class="mt-6 rounded-2xl border border-slate-200 bg-white p-5
-                dark:border-slate-700 dark:bg-slate-800">
-        <div class="flex items-center justify-between">
-            <h3 class="font-semibold">Recent Orders</h3>
-            <a href="{{ route('admin.events.index') }}"
-               class="text-sm text-indigo-600 hover:text-indigo-500 font-medium">View all</a>
-        </div>
-
-        <div class="mt-4 overflow-x-auto">
-            <table class="min-w-full text-sm">
-                <thead class="text-left text-slate-500 dark:text-slate-400">
-                    <tr class="border-b border-slate-200 dark:border-slate-700">
-                        <th class="py-3 pe-4">Order #</th>
-                        <th class="py-3 pe-4">Customer</th>
-                        <th class="py-3 pe-4">Event</th>
-                        <th class="py-3 pe-4">Total</th>
-                        <th class="py-3 pe-4">Status</th>
-                        <th class="py-3 pe-4 text-right">Action</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-slate-200 dark:divide-slate-700">
-                    @foreach(range(1,6) as $i)
+        <div class="bg-gray-800 rounded-lg shadow-md border border-gray-700 overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full">
+                    <thead class="bg-gray-700">
                         <tr>
-                            <td class="py-3 pe-4 font-medium">#INV-10{{ $i }}</td>
-                            <td class="py-3 pe-4">User {{ $i }}</td>
-                            <td class="py-3 pe-4">Event {{ ['A','B','C','D','E','F'][$i-1] }}</td>
-                            <td class="py-3 pe-4">$ {{ number_format(80 + $i*12) }}</td>
-                            <td class="py-3 pe-4">
-                                <span class="inline-flex items-center rounded-full px-2 py-0.5 text-xs
-                                    {{ $i%3===0 ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/20' :
-                                       ($i%2===0 ? 'bg-emerald-100 text-emerald-700 dark:bg-emerald-900/20' :
-                                                   'bg-sky-100 text-sky-700 dark:bg-sky-900/20') }}">
-                                    {{ $i%3===0 ? 'Pending' : ($i%2===0 ? 'Paid' : 'Processing') }}
-                                </span>
+                            <th class="text-left text-white px-6 py-3">Order #</th>
+                            <th class="text-left text-white px-6 py-3">Customer</th>
+                            <th class="text-left text-white px-6 py-3">Event</th>
+                            <th class="text-left text-white px-6 py-3">Total</th>
+                            <th class="text-left text-white px-6 py-3">Status</th>
+                            <th class="text-center text-white px-6 py-3">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-300">
+                        @forelse($recentOrders as $order)
+                        <tr class="border-b border-gray-700 hover:bg-gray-700/50">
+                            <td class="px-6 py-4 font-mono text-sm">{{ $order->order_id }}</td>
+                            <td class="px-6 py-4">{{ $order->user->name }}</td>
+                            <td class="px-6 py-4">{{ $order->event->nama_event }}</td>
+                            <td class="px-6 py-4">Rp {{ number_format($order->total_harga) }}</td>
+                            <td class="px-6 py-4">
+                                @if($order->status_pembayaran == 'paid')
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-500 text-green-900">Paid</span>
+                                @else
+                                    <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-500 text-yellow-900">{{ ucfirst($order->status_pembayaran) }}</span>
+                                @endif
                             </td>
-                            <td class="py-3 pe-4 text-right">
-                                <a href="#" class="rounded-lg px-3 py-1.5 text-xs font-semibold bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 dark:hover:bg-slate-600">Detail</a>
+                            <td class="px-6 py-4 text-center">
+                                <a href="{{ route('admin.transactions.invoice', $order->order_id) }}" class="bg-indigo-600 hover:bg-indigo-700 text-white px-3 py-1 rounded-md text-xs font-bold" target="_blank">Detail</a>
                             </td>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
+                        @empty
+                        <tr>
+                            <td colspan="6" class="text-center text-gray-400 p-6">Tidak ada transaksi terbaru.</td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
+</div>
 @endsection

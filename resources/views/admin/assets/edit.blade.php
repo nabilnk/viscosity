@@ -1,106 +1,49 @@
 @extends('layouts.admin')
+
 @section('content')
-    <div class="container mx-auto p-6">
-        <h1 class="text-2xl font-bold mb-6">Edit Asset</h1>
-        <form action="{{ route('admin.assets.update', $asset) }}" method="POST" enctype="multipart/form-data" class="space-y-4">
+<div class="container mx-auto px-6 py-8">
+    <div class="bg-gray-800 p-6 rounded-lg shadow-md border border-gray-700" x-data="{ type: '{{ $asset->type }}' }">
+        <h1 class="text-2xl font-bold text-white mb-6">Edit Aset Halaman Home</h1>
+        <form method="POST" action="{{ route('admin.assets.update', $asset->id) }}" enctype="multipart/form-data">
             @csrf
             @method('PUT')
-
-            <div>
-                <label for="type" class="block text-gray-700 text-sm font-bold mb-2">Type</label>
-                <select id="type" name="type" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                    <option value="track_record" @selected( $asset->type === 'track_record')>Track Record</option>
-                    <option value="our_team" @selected($asset->type === 'our_team')>Our Team</option>
+            
+            <div class="mb-4">
+                <label for="type" class="block font-medium text-sm text-gray-300">Tipe Aset</label>
+                <select id="type" name="type" x-model="type" class="mt-1 block w-full py-2 px-3 border border-gray-600 bg-gray-700 text-white rounded-md shadow-sm" required>
+                    <option value="track_record" @selected($asset->type == 'track_record')>Track Record Activity</option>
+                    <option value="documentation" @selected($asset->type == 'documentation')>Documentation</option>
+                    <option value="team" @selected($asset->type == 'team')>Our Team</option>
+                    <option value="collaboration" @selected($asset->type == 'collaboration')>Collaboration</option>
                 </select>
-                @error('type')
-                <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                @enderror
             </div>
 
-            <div class="name-container"  @if($asset->type != 'our_team') style="display:none;" @endif >
-                <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name</label>
-                <input type="text" id="name" name="name" value="{{$asset->name}}"
-                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" >
-                @error('name')
-                <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                @enderror
+            <div class="mb-4">
+                <label for="image" class="block font-medium text-sm text-gray-300">Ganti Gambar (Opsional)</label>
+                <input id="image" name="image" type="file" class="mt-1 block w-full text-gray-300 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-700">
+                @if($asset->image)
+                    <img src="{{ asset('storage/assets_home/' . $asset->image) }}" alt="Current Image" class="mt-2 rounded-lg" style="max-width: 200px;">
+                @endif
             </div>
 
-            <div class="position-container"  @if($asset->type != 'our_team') style="display:none;" @endif>
-                <label for="position" class="block text-gray-700 text-sm font-bold mb-2">Position</label>
-                <input type="text" id="position" name="position" value="{{$asset->position}}"
-                       class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                @error('position')
-                <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                @enderror
+            <!-- Input yang hanya muncul jika type = 'team' -->
+            <div x-show="type === 'team'" x-transition class="border-t border-gray-700 pt-4 mt-4">
+                <p class="text-sm text-gray-400 mb-4">Isi detail untuk anggota tim (opsional).</p>
+                <div class="mb-4">
+                    <label for="name" class="block font-medium text-sm text-gray-300">Nama Anggota Tim</label>
+                    <input id="name" name="name" type="text" class="mt-1 block w-full bg-gray-700 border-gray-600 text-white rounded-md shadow-sm" value="{{ old('name', $asset->name) }}">
+                </div>
+                <div class="mb-4">
+                    <label for="position" class="block font-medium text-sm text-gray-300">Jabatan</label>
+                    <input id="position" name="position" type="text" class="mt-1 block w-full bg-gray-700 border-gray-600 text-white rounded-md shadow-sm" value="{{ old('position', $asset->position) }}">
+                </div>
             </div>
 
-           <div class="image-container"  @if($asset->type != 'track_record') style="display:none;" @endif>
-             <label for="image" class="block text-gray-700 text-sm font-bold mb-2">Image</label>
-             <input type="file" id="image" name="image" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-               @if ($asset->image)
-                <img src="{{ asset('storage/' . $asset->image) }}" alt="Image" style="max-width: 200px; height: auto;" class="mt-4">
-                 @endif
-
-             @error('image')
-              <p class="text-red-500 text-xs italic">{{ $message }}</p>
-             @enderror
-           </div>
-           <div class="documentation-container" @if($asset->type != 'track_record') style="display:none;" @endif>
-             <label for="documentation" class="block text-gray-700 text-sm font-bold mb-2">Documentation Image</label>
-              <input type="file" id="documentation" name="documentation" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
-                @if ($asset->documentation)
-                <img src="{{ asset('storage/' . $asset->documentation) }}" alt="Documentation" style="max-width: 200px; height: auto;" class="mt-4">
-                 @endif
-             @error('documentation')
-               <p class="text-red-500 text-xs italic">{{ $message }}</p>
-                @enderror
-          </div>
-
-            <div class="flex items-center justify-between">
-                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">
-                    Update Asset
-                </button>
-                <a href="{{ route('admin.assets.index') }}" class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
-                    Cancel
-                </a>
+            <div class="flex items-center space-x-4 mt-6">
+                <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold px-5 py-2 rounded-lg">Update</button>
+                <a href="{{ route('admin.assets.index') }}" class="text-gray-400 hover:text-white">Batal</a>
             </div>
         </form>
     </div>
-</x-app-layout>
-@push('scripts')
-    <script>
-      const typeSelect = document.getElementById('type');
-      const nameContainer = document.querySelector('.name-container');
-      const positionContainer = document.querySelector('.position-container');
-      const imageContainer = document.querySelector('.image-container');
-      const docContainer = document.querySelector('.documentation-container');
-
-      function toggleFields() {
-        const selectedType = typeSelect.value;
-           // Sembunyikan semua field
-        nameContainer.style.display = 'none';
-        positionContainer.style.display = 'none';
-        imageContainer.style.display = 'none';
-        docContainer.style.display = 'none';
-
-        if (selectedType === 'track_record') {
-            // Display only image and documentation for Track Record
-            imageContainer.style.display = 'block';
-            docContainer.style.display = 'block';
-        } else if (selectedType === 'our_team') {
-            // Display name, position, and image for Our Team
-            nameContainer.style.display = 'block';
-            positionContainer.style.display = 'block';
-            imageContainer.style.display = 'block';
-        }
-      }
-
-       // Panggil saat halaman diload
-       toggleFields();
-
-      // Panggil fungsi saat pilihan berubah
-      typeSelect.addEventListener('change', toggleFields);
-    </script>
-    @endpush
+</div>
 @endsection

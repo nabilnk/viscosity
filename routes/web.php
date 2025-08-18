@@ -1,19 +1,24 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\ProfileController;
+// Controller Public
 use App\Http\Controllers\PageController;
-use App\Http\Controllers\AdminController;
-use App\Http\Controllers\EventController;
-use App\Http\Controllers\TalentController;
-use App\Http\Controllers\NofreqController;
-use App\Http\Controllers\AssetHomeController;
-use App\Http\Controllers\VVIPController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\TicketController;
+use App\Http\Controllers\VVIPController;
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\NofreqController;
+use App\Http\Controllers\TalentController;
+use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\ProfileController;
+
+// Controller Admin
+use App\Http\Controllers\AssetHomeController;
+use App\Http\Controllers\Admin\EventController;
+use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\TransactionController as AdminTransactionController;
 
 
 // ==================
@@ -22,6 +27,7 @@ use App\Http\Controllers\PaymentController;
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/event/monthly', [PageController::class, 'eventMonthly'])->name('event.monthly');
 Route::get('/event/exclusive', [PageController::class, 'eventExclusive'])->name('event.exclusive');
+Route::get('/event/{event}', [PageController::class, 'eventDetail'])->name('event.detail');
 Route::get('/talent', [PageController::class, 'talent'])->name('talent');
 Route::get('/vvip', [PageController::class, 'vvip'])->name('vvip');
 Route::get('/nofreq', [PageController::class, 'nofreq'])->name('nofreq');
@@ -35,11 +41,13 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
+    Route::get('/history', [HistoryController::class, 'index'])->name('history.index');
+    Route::get('/ticket/{order_id}', [HistoryController::class, 'show'])->name('ticket.show');
 });
 
 
 
-Route::get('/event/pay/{event}', [PaymentController::class, 'checkout'])->name('event.pay');
+Route::post('/event/pay/{event}', [PaymentController::class, 'checkout'])->name('event.pay')->middleware('auth');
 Route::post('/midtrans/callback', [PaymentController::class, 'callback'])->name('midtrans.callback');
 
 
@@ -103,14 +111,20 @@ Route::middleware(['auth'])->prefix('logadmin')->group(function () {
     });
 
     // VVIP
-    Route::prefix('vvip')->group(function () {
-        Route::get('/', [VVIPController::class, 'index'])->name('admin.vvip.index');
-        Route::post('/toggle', [VVIPController::class, 'toggle'])->name('admin.vvip.toggle');
-    });
+    Route::get('/vvip', [VVIPController::class, 'index'])->name('admin.vvip.index');
+    Route::post('/vvip', [VVIPController::class, 'update'])->name('admin.vvip.update');
 
-    // USERS & TICKETS
+    // USERS 
     Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
-    Route::get('/tickets', [TicketController::class, 'index'])->name('admin.tickets.index');
+
+    // Rute untuk Transaksi
+    Route::get('/transactions', [AdminTransactionController::class, 'index'])->name('admin.transactions.index');
+    Route::get('/transactions/invoice/{order_id}', [AdminTransactionController::class, 'downloadInvoice'])->name('admin.transactions.invoice');
+
+        // Rute untuk Settings
+    Route::get('/settings', [SettingController::class, 'index'])->name('admin.settings.index');
+    Route::post('/settings/toggle-exclusive', [SettingController::class, 'toggleExclusiveComingSoon'])->name('admin.settings.toggleExclusive');
+    Route::post('/settings/toggle-vvip', [SettingController::class, 'toggleVVIPStatus'])->name('admin.settings.toggleVVIP');
 });
 
 
