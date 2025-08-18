@@ -10,7 +10,7 @@ class AssetHome extends Model
     use HasFactory;
 
     protected $fillable = [
-        'type', // track_record, documentation, our_team
+        'type', // track_record +documentation, our_team
         'image',
         'name',
         'documentation',

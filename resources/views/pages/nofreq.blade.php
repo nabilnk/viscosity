@@ -17,7 +17,11 @@
                 @foreach($videos as $video)
                     <div class="relative aspect-video rounded-2xl overflow-hidden transition-shadow hover:shadow-xl">
                          {{-- Thumbnail video --}}
-                        <img src="{{ $video['thumbnail'] }}" alt="{{ $video['title'] }}" class="w-full h-full object-cover">
+                         <x-skeleton class="w-full h-full">
+                             <img src="{{ $video['thumbnail'] }}" 
+                             alt="{{ $video['title'] }}" 
+                             class="w-full h-full object-cover">
+                         </x-skeleton>
 
                         {{-- OVERLAY: Nama Video & Tombol Play --}}
                         <div class="absolute bottom-0 left-0 right-0 p-4 bg-black/30 backdrop-blur-md">

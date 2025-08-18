@@ -1,8 +1,18 @@
 <x-app-layout>
     {{-- SECTION HERO --}}
-    <section class="pt-24 pb-20 px-4 text-center bg-black/60 backdrop-blur-sm">
-        <img src="{{ asset('assets/logo/viscosity-text.png') }}" alt="Viscosity Logo" class="mx-auto w-2/3 sm:w-1/2 md:w-2/5">
-        <img src="{{ asset('assets/home/hero-flyer.png') }}" alt="Viscosity Flyer" class="mx-auto my-6 w-96 h-auto rounded-xl shadow-lg">
+    <section class=" relative pt-24 pb-20 px-4 text-center bg-black/60 backdrop-blur-sm">
+
+        <x-skeleton class="mx-auto w-2/3 sm:w-1/2 md:w-2/5">
+            <img src="{{ asset('assets/logo/viscosity-text.png') }}"
+             alt="Viscosity Logo" 
+             class="mx-auto w-2/3 sm:w-1/2 md:w-2/5 opacity-0 transition-opacity duration-500">
+        </x-skeleton>
+
+        <x-skeleton class="mx-auto my-6 w-96 h-auto rounded-xl shadow-lg">
+            <img src="{{ asset('assets/home/hero-flyer.png') }}" 
+            alt="Viscosity Flyer" 
+            class="mx-auto my-6 w-96 h-auto rounded-xl shadow-lg opacity-0 transition-opacity duration-500">
+        </x-skeleton>
         <p class="max-w-4xl mx-auto text-base md:text-lg text-gray-200 mt-6">
             Viscosity is an underground music and nightlife collective, rooted in the pulse of the rave scene and the raw 
             energy of after-hours culture. Since 2021, we’ve been curating gritty, high-intensity experiences through DJ-driven events,
@@ -13,42 +23,72 @@
 
     {{-- SECTION TRACK RECORD AND DOCUMENTATION --}}
     <section class="py-20 px-4 space-y-16">
-            <div>
-                <h2 class="text-4xl font-bold text-center mb-12">Track Record Activity</h2>
-                <div class="swiper swiper-activity overflow-visible">
-                    <div class="swiper-wrapper items-center">
-                        <div class="swiper-slide" style="width: 70%">
-                            <div class="bg-black/40 backdrop-blur-sm border border-gray-700/50 rounded-lg overflow-hidden">
-                                <img src="{{ asset('assets/home/hero-flyer.png') }}" alt="Track Record 1" class="w-full h-96 object-cover">
-                            </div>
+        <div>
+            <h2 class="text-4xl font-bold text-center mb-12">Track Record Activity</h2>
+            <div class="swiper swiper-activity overflow-visible">
+                <div class="swiper-wrapper items-center">
+                    <div class="swiper-slide" style="width: 70%">
+                        <div class="bg-black/40 backdrop-blur-sm border border-gray-700/50 rounded-lg overflow-hidden">
+                            <x-skeleton class="w-full h-96">
+                                <img src="{{ asset('assets/home/hero-flyer.png') }}" 
+                                alt="Track Record 1" 
+                                class="w-full h-96 object-cover opacity-0 transition-opacity duration-500">
+                            </x-skeleton>
                         </div>
-                        <div class="swiper-slide" style="width: 70%">
-                            <div class="bg-black/40 backdrop-blur-sm border border-gray-700/50 rounded-lg overflow-hidden">
-                                <img src="{{ asset('assets/home/hero-flyer.png') }}" alt="Track Record 2" class="w-full h-96 object-cover">
-                            </div>
+                    </div>
+                    <div class="swiper-slide" style="width: 70%">
+                        <div class="bg-black/40 backdrop-blur-sm border border-gray-700/50 rounded-lg overflow-hidden">
+                            <x-skeleton class="w-full h-96">
+                                <img src="{{ asset('assets/home/hero-flyer.png') }}" 
+                                alt="Track Record 2" 
+                                class="w-full h-96 object-cover opacity-0 transition-opacity duration-500">
+                            </x-skeleton>
                         </div>
-                        <div class="swiper-slide" style="width: 70%">
-                            <div class="bg-black/40 backdrop-blur-sm border border-gray-700/50 rounded-lg overflow-hidden">
-                                <img src="{{ asset('assets/home/hero-flyer.png') }}" alt="Track Record 3" class="w-full h-96 object-cover">
-                            </div>
+                    </div>
+                    <div class="swiper-slide" style="width: 70%">
+                        <div class="bg-black/40 backdrop-blur-sm border border-gray-700/50 rounded-lg overflow-hidden">
+                            <x-skeleton class="w-full h-96">
+                                <img src="{{ asset('assets/home/hero-flyer.png') }}" 
+                                alt="Track Record 3" 
+                                class="w-full h-96 object-cover opacity-0 transition-opacity duration-500">
+                            </x-skeleton>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <div class="max-w-5xl mx-auto">
-                <h2 class="text-4xl font-bold text-center mb-12">Documentation</h2>
-                <div class="swiper swiper-documentation overflow-hidden rounded-lg">
-                    <div class="swiper-wrapper">
-                        <div class="swiper-slide"><img src="{{ asset('assets/home/hero-flyer.png') }}" alt="Documentation 1" class="w-full h-auto object-cover"></div>
-                        <div class="swiper-slide"><img src="{{ asset('assets/home/hero-flyer.png') }}" alt="Documentation 2" class="w-full h-auto object-cover"></div>
-                        <div class="swiper-slide"><img src="{{ asset('assets/home/hero-flyer.png') }}" alt="Documentation 3" class="w-full h-auto object-cover"></div>
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-4xl font-bold text-center mb-12">Documentation</h2>
+            <div class="swiper swiper-documentation overflow-hidden rounded-lg">
+                <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                        <x-skeleton class="w-full h-auto">
+                            <img src="{{ asset('assets/home/hero-flyer.png') }}" 
+                            alt="Documentation 1" 
+                            class="w-full h-auto object-cover opacity-0 transition-opacity duration-500">
+                        </x-skeleton>
+                    </div>
+                    <div class="swiper-slide">
+                        <x-skeleton class="w-full h-auto">
+                            <img src="{{ asset('assets/home/hero-flyer.png') }}" 
+                            alt="Documentation 2" 
+                            class="w-full h-auto object-cover opacity-0 transition-opacity duration-500">
+                        </x-skeleton>
+                    </div>
+                    <div class="swiper-slide">
+                        <x-skeleton class="w-full h-auto">
+                            <img src="{{ asset('assets/home/hero-flyer.png') }}" 
+                            alt="Documentation 3" 
+                            class="w-full h-auto object-cover opacity-0 transition-opacity duration-500">
+                        </x-skeleton>
                     </div>
                 </div>
             </div>
+        </div>
     </section>
 
-    {{-- SECTION OUR TEAM (Tidak ada perubahan) --}}
+    {{-- SECTION OUR TEAM --}}
     <section class="py-20 px-4">
         <div class="max-w-5xl mx-auto">
             <h2 class="text-4xl font-bold text-center mb-16">Our Team</h2>
@@ -58,8 +98,11 @@
                     {{-- CARD TIM 1 --}}
                     <div class="swiper-slide text-center">
                         <div class="relative w-64 h-80 mx-auto bg-black/40 backdrop-blur-sm border border-gray-700/50 rounded-lg flex items-center justify-center mb-4 overflow-hidden">
-                            {{-- GANTI DENGAN FOTO ANDA --}}
-                            <img src="{{ asset('assets/team/team-1.jpg') }}" alt="Nama Anggota 1" class="w-full h-full object-cover">
+                            <x-skeleton class="w-full h-full">
+                                <img src="{{ asset('assets/team/team-1.jpg') }}" 
+                                alt="Nama Anggota 1" 
+                                class="w-full h-full object-cover opacity-0 transition-opacity duration-500">
+                            </x-skeleton>
                         </div>
                         <h3 class="font-semibold text-lg">Kemal</h3>
                         <p class="text-gray-400">Jabatan 1</p>
@@ -68,8 +111,11 @@
                     {{-- CARD TIM 2 --}}
                     <div class="swiper-slide text-center">
                         <div class="relative w-64 h-80 mx-auto bg-black/40 backdrop-blur-sm border border-gray-700/50 rounded-lg flex items-center justify-center mb-4 overflow-hidden">
-                            {{-- GANTI DENGAN FOTO ANDA --}}
-                            <img src="{{ asset('assets/team/team-1.jpg') }}" alt="Nama Anggota 2" class="w-full h-full object-cover">
+                            <x-skeleton class="w-full h-full">
+                                <img src="{{ asset('assets/team/team-1.jpg') }}"
+                                 alt="Nama Anggota 2" 
+                                 class="w-full h-full object-cover opacity-0 transition-opacity duration-500">
+                            </x-skeleton>
                         </div>
                         <h3 class="font-semibold text-lg">Kemal</h3>
                         <p class="text-gray-400">Jabatan 2</p>
@@ -78,8 +124,11 @@
                     {{-- CARD TIM 3 --}}
                     <div class="swiper-slide text-center">
                         <div class="relative w-64 h-80 mx-auto bg-black/40 backdrop-blur-sm border border-gray-700/50 rounded-lg flex items-center justify-center mb-4 overflow-hidden">
-                            {{-- GANTI DENGAN FOTO ANDA --}}
-                             <img src="{{ asset('assets/team/team-1.jpg') }}" alt="Nama Anggota 3" class="w-full h-full object-cover">
+                            <x-skeleton class="w-full h-full">
+                                <img src="{{ asset('assets/team/team-1.jpg') }}" 
+                                alt="Nama Anggota 3" 
+                                class="w-full h-full object-cover opacity-0 transition-opacity duration-500">
+                            </x-skeleton>
                         </div>
                         <h3 class="font-semibold text-lg">Kemal</h3>
                         <p class="text-gray-400">Jabatan 3</p>
@@ -90,16 +139,24 @@
         </div>
     </section>
 
-    {{-- SECTION COLLABORATION & FOOTER (Tidak ada perubahan) --}}
+    {{-- SECTION COLLABORATION & FOOTER --}}
     <section class="py-15 px-4">
          <div class="max-w-4xl mx-auto text-center p-10 bg-black/40 backdrop-blur-md border border-gray-700/50 rounded-2xl">
             <h2 class="text-3xl font-bold text-center mb-10">In Collaboration With</h2>
             <div class="flex flex-wrap justify-center items-center gap-x-12 gap-y-8">
-                {{-- GANTI DENGAN LOGO PARTNER ANDA --}}
-                <img src="{{ asset('assets/partners/iceperience.png') }}" alt="ICEPERIENCE.ID" class="h-14 transition-transform hover:scale-110">
-                <img src="{{ asset('assets/partners/partymap.png') }}" alt="PARTY MAP" class="h-16 transition-transform hover:scale-110">
-                <img src="{{ asset('assets/partners/komunitas-event.png') }}" alt="KOMUNITAS EVENT" class="h-36 transition-transform hover:scale-110">
-                {{-- TAMBAHKAN LOGO LAINNYA DI SINI --}}
+                <x-skeleton class="h-14">
+                    <img src="{{ asset('assets/partners/iceperience.png') }}" 
+                    alt="ICEPERIENCE.ID" class="h-14 hover:scale-110 opacity-0 transition-opacity duration-500">
+                </x-skeleton>
+                <x-skeleton class="h-16">
+                    <img src="{{ asset('assets/partners/partymap.png') }}" 
+                    alt="PARTY MAP" class="h-16 hover:scale-110 opacity-0 transition-opacity duration-500">
+                </x-skeleton>
+                <x-skeleton class="h-36">
+                    <img src="{{ asset('assets/partners/komunitas-event.png') }}" 
+                    alt="KOMUNITAS EVENT" 
+                    class="h-36 hover:scale-110 opacity-0 transition-opacity duration-500">
+                </x-skeleton>
             </div>
          </div>
     </section>
@@ -112,7 +169,10 @@
                 {{-- Tombol WhatsApp --}}
                 <a href="https://wa.me/6282328591655" target="_blank" class="flex flex-col items-center justify-center w-48 h-32 bg-black/40 backdrop-blur-md border border-gray-700/50 rounded-2xl group hover:border-green-500 transition-colors duration-300">
                     <div class="p-4 bg-green-600 rounded-full mb-2 transition-transform group-hover:scale-110">
-                        <svg class="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M16.999 3.001c-2.454-2.454-5.71-3.682-8.999-3.001-3.288.681-6.113 3.507-6.794 6.794-.681 3.288.547 6.545 3.001 8.999l-1.206 4.209 4.39-1.256c2.316 1.439 5.111 1.696 7.609.789 2.498-.907 4.591-2.999 5.498-5.498.907-2.498.65-5.293-.789-7.609zm-2.883 11.237c-.218.218-.511.341-.82.341-.308 0-.602-.123-.82-.341l-1.018-.999c-.66-.64-1.602-.919-2.502-.738l-1.39.286c-.24.049-.488-.049-.66-.238-.171-.188-.239-.45-.18-.707l.295-1.298c.328-1.439-.079-2.969-.999-4.148-.92-.1179-1.999.308-2.618.999-.619.69-.999 1.631-.999 2.618 0 .988.38 1.928.999 2.618l.999.999c.438.438.969.748 1.538.919l1.419.429c.5.15.96.44 1.32.84z"/></svg>
+                        {{-- SVG WhatsApp Simple --}}
+                        <svg class="w-6 h-6 text-white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
+                            <path fill="currentColor" d="M19.05 4.91A9.82 9.82 0 0 0 12.04 2c-5.46 0-9.91 4.45-9.91 9.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.25-1.38c1.45.79 3.08 1.21 4.74 1.21c5.46 0 9.91-4.45 9.91-9.91c0-2.65-1.03-5.14-2.9-7.01m-7.01 15.24c-1.48 0-2.93-.4-4.2-1.15l-.3-.18l-3.12.82l.83-3.04l-.2-.31a8.26 8.26 0 0 1-1.26-4.38c0-4.54 3.7-8.24 8.24-8.24c2.2 0 4.27.86 5.82 2.42a8.18 8.18 0 0 1 2.41 5.83c.02 4.54-3.68 8.23-8.22 8.23m4.52-6.16c-.25-.12-1.47-.72-1.69-.81c-.23-.08-.39-.12-.56.12c-.17.25-.64.81-.78.97c-.14.17-.29.19-.54.06c-.25-.12-1.05-.39-1.99-1.23c-.74-.66-1.23-1.47-1.38-1.72c-.14-.25-.02-.38.11-.51c.11-.11.25-.29.37-.43s.17-.25.25-.41c.08-.17.04-.31-.02-.43s-.56-1.34-.76-1.84c-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.43.06-.66.31c-.22.25-.86.85-.86 2.07s.89 2.4 1.01 2.56c.12.17 1.75 2.67 4.23 3.74c.59.26 1.05.41 1.41.52c.59.19 1.13.16 1.56.1c.48-.07 1.47-.6 1.67-1.18c.21-.58.21-1.07.14-1.18s-.22-.16-.47-.28"/>
+                        </svg>
                     </div>
                     <span class="text-sm font-medium text-gray-300">0823-2859-1655</span>
                 </a>
@@ -132,7 +192,6 @@
         </div>
     </footer>
 
-
     {{-- SCRIPT JS --}}
     @push('scripts')
     <script>
@@ -144,7 +203,7 @@
                 slidesPerView: 1,
                 allowTouchMove: false,
             });
-
+    
             // Swiper Activity (efek coverflow + sinkron)
             const swiperActivity = new Swiper('.swiper-activity', {
                 effect: 'coverflow',
@@ -161,10 +220,10 @@
                 },
                 controller: { control: swiperDocumentation },
             });
-
+    
             // Sinkron dua arah
             swiperDocumentation.controller.control = swiperActivity;
-
+    
             // Swiper Team (tidak berubah)
             const swiperTeam = new Swiper('.swiper-team', {
                 loop: true,
@@ -182,5 +241,4 @@
         });
     </script>
     @endpush
-
 </x-app-layout>

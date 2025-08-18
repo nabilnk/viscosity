@@ -3,29 +3,33 @@
 namespace App\Http\Controllers;
 
 use App\Models\Event;
+use App\Models\Transaction;
+use App\Models\Setting;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
-use App\Models\Setting;
+use Illuminate\Support\Facades\Auth;
+
 
 class EventController extends Controller
 {
+
+
     /**
-     * Display a listing of the resource.
+     * 1. List Event (Monthly / Exclusive)
      */
     public function index(Request $request)
     {
-        $type = $request->input('type');
-        $events = Event::when($type, fn($query, $type) => $query->where('type', $type))->get();
+        $type   = $request->input('type');
+        $events = Event::when($type, fn($q) => $q->where('type', $type))->get();
 
-        // baca status dari DB (default = false)
-        $isComingSoon = \App\Models\Setting::get('exclusive_coming_soon', false);
+        $isComingSoon = Setting::get('exclusive_coming_soon', false);
 
         return view('admin.events.index', compact('events', 'type', 'isComingSoon'));
     }
 
-
     /**
-     * Show the form for creating a new resource.
+     * 2. Create Event
      */
     public function create()
     {
@@ -33,47 +37,36 @@ class EventController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * 3. Store Event
      */
     public function store(Request $request)
     {
-         $request->validate([
-            'title' => 'required|string|max:255',
+        $request->validate([
+            'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
-            'location' => 'nullable|string|max:255',
-            'city' => 'nullable|string|max:255',
-            'date' => 'required|date',
+            'location'    => 'nullable|string|max:255',
+            'city'        => 'nullable|string|max:255',
+            'date'        => 'required|date',
             'flyer_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'type' => 'required|in:monthly,exclusive',
-            'is_published' => 'required|boolean',
+            'type'        => 'required|in:monthly,exclusive',
+            'price'       => 'nullable|integer',
+            'is_published'=> 'boolean',
         ]);
 
-         // Proses upload gambar (jika ada)
-          $path = null; // Inisialisasi $path
+        $path = $request->hasFile('flyer_image')
+            ? $request->file('flyer_image')->store('events', 'public')
+            : null;
 
-          if ($request->hasFile('flyer_image')) {
-              $path = Storage::disk('public')->put('events', $request->file('flyer_image'));
-          }
-
-          $event = new Event($request->except('flyer_image')); // Create Event
-           // Simpan data dan atur kolom is_published
-           $event->flyer_image = $path;
-            $event->is_published = $request->has('is_published'); // Mengatur nilai is_published berdasarkan checkbox
+        $event              = new Event($request->except('flyer_image'));
+        $event->flyer_image = $path;
+        $event->is_published = $request->boolean('is_published');
         $event->save();
 
-          return redirect()->route('admin.events.index')->with('success', 'Event created successfully!');
+        return redirect()->route('admin.events.index')->with('success', 'Event created successfully!');
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Event $event)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
+     * 4. Edit Event
      */
     public function edit(Event $event)
     {
@@ -81,61 +74,56 @@ class EventController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * 5. Update Event
      */
     public function update(Request $request, Event $event)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
+            'title'       => 'required|string|max:255',
             'description' => 'nullable|string',
-            'location' => 'nullable|string|max:255',
-            'city' => 'nullable|string|max:255',
-            'date' => 'required|date',
+            'location'    => 'nullable|string|max:255',
+            'city'        => 'nullable|string|max:255',
+            'date'        => 'required|date',
             'flyer_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'type' => 'required|in:monthly,exclusive',
-            'is_published' => 'required|boolean',
+            'type'        => 'required|in:monthly,exclusive',
+            'price'       => 'nullable|integer',
+            'is_published'=> 'boolean',
         ]);
 
-        // Proses upload gambar (jika ada)
         if ($request->hasFile('flyer_image')) {
-            // Hapus gambar lama (jika ada)
             if ($event->flyer_image) {
                 Storage::disk('public')->delete($event->flyer_image);
             }
-             $path = Storage::disk('public')->put('events', $request->file('flyer_image'));
-              $event->flyer_image = $path;
+            $event->flyer_image = $request->file('flyer_image')->store('events', 'public');
         }
 
-          // update is_published
-        $event->is_published = $request->has('is_published');
-
-        $event->update($request->except('flyer_image'));
-
+        $event->fill($request->except('flyer_image'));
+        $event->is_published = $request->boolean('is_published');
         $event->save();
-        return redirect()->route('admin.events.index')->with('success', 'Talent updated successfully!');
+
+        return redirect()->route('admin.events.index')->with('success', 'Event updated successfully!');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * 6. Delete Event
      */
     public function destroy(Event $event)
     {
         if ($event->flyer_image) {
             Storage::disk('public')->delete($event->flyer_image);
         }
-
         $event->delete();
 
-          return redirect()->route('admin.events.index')->with('success', 'Event deleted successfully!');
+        return redirect()->route('admin.events.index')->with('success', 'Event deleted successfully!');
     }
 
+    /**
+     * 7. Toggle Coming Soon untuk Exclusive
+     */
     public function toggleComingSoon(Request $request)
     {
-        // ambil dari checkbox, kalau ada berarti true, kalau nggak berarti false
-        $value = $request->has('is_coming_soon');
-
-        // simpan ke tabel settings
-        \App\Models\Setting::set('exclusive_coming_soon', $value ? 1 : 0);
+        $value = $request->boolean('is_coming_soon');
+        Setting::set('exclusive_coming_soon', $value ? 1 : 0);
 
         return back()->with('success', 'Coming Soon mode updated!');
     }

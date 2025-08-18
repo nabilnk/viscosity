@@ -17,5 +17,6 @@ class Event extends Model
         'city',
         'flyer_image',
         'is_published', //tambahkan ini
+        'price', // harga tiket
     ];
 }

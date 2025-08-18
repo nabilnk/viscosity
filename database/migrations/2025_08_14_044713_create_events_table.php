@@ -21,6 +21,9 @@ return new class extends Migration
             $table->string('flyer_image')->nullable(); // Path ke gambar flyer
             $table->enum('type', ['monthly', 'exclusive'])->default('monthly');
             $table->boolean('is_published')->default(true); // Untuk fitur COMING SOON
+            $table->decimal('ticket_price', 12, 2)->nullable();
+            $table->integer('ticket_quota')->nullable();
+            $table->integer('tickets_sold')->default(0);
             $table->timestamps();
         });
     }

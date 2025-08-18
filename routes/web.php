@@ -13,8 +13,12 @@ use App\Http\Controllers\AssetHomeController;
 use App\Http\Controllers\VVIPController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\PaymentController;
 
 
+// ==================
+// Public Pages
+// ==================
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/event/monthly', [PageController::class, 'eventMonthly'])->name('event.monthly');
 Route::get('/event/exclusive', [PageController::class, 'eventExclusive'])->name('event.exclusive');
@@ -24,21 +28,19 @@ Route::get('/nofreq', [PageController::class, 'nofreq'])->name('nofreq');
 
 
 // ==================
-// User Dashboard (Bawaan Breeze)
-// ==================
-// Route::get('/dashboard', function () {
-//     return view('dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
-
-
-// ==================
-// Profile User (Butuh Login)
+// Profile & Checkout (Butuh Login)
 // ==================
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
 });
+
+
+
+Route::get('/event/pay/{event}', [PaymentController::class, 'checkout'])->name('event.pay');
+Route::post('/midtrans/callback', [PaymentController::class, 'callback'])->name('midtrans.callback');
 
 
 // ==================
@@ -55,13 +57,12 @@ Route::get('/test-reset-password', function () {
 // Admin Panel (Butuh Login)
 // ==================
 Route::middleware(['auth'])->prefix('logadmin')->group(function () {
-
     
     // Halaman utama admin
     Route::get('/', [AdminController::class, 'index'])->name('admin.index');
 
     // EVENTS
-     Route::prefix('events')->group(function () {
+    Route::prefix('events')->group(function () {
         Route::get('/', [EventController::class, 'index'])->name('admin.events.index');
         Route::get('/create', [EventController::class, 'create'])->name('admin.events.create');
         Route::post('/', [EventController::class, 'store'])->name('admin.events.store');
@@ -107,8 +108,9 @@ Route::middleware(['auth'])->prefix('logadmin')->group(function () {
         Route::post('/toggle', [VVIPController::class, 'toggle'])->name('admin.vvip.toggle');
     });
 
-    Route::get('/logadmin/users', [UserController::class, 'index'])->name('admin.users.index');
-    Route::get('/logadmin/tickets', [TicketController::class, 'index'])->name('admin.tickets.index');
+    // USERS & TICKETS
+    Route::get('/users', [UserController::class, 'index'])->name('admin.users.index');
+    Route::get('/tickets', [TicketController::class, 'index'])->name('admin.tickets.index');
 });
 
 

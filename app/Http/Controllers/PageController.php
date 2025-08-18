@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Event;
 
 class PageController extends Controller
 {
@@ -22,15 +23,24 @@ class PageController extends Controller
         return view('pages.event.monthly');
     }
 
-    // Method untuk halaman Event Exclusive
-    public function eventExclusive()
+    
+    public function eventExclusive(Request $request)
     {
-        return view('pages.event.exclusive');
+        $type = $request->input('type');
+
+        $events = Event::when($type, function ($query, $type) {
+            $query->where('type', $type);
+        })->get();
+
+        // Kirim data event dan type ke view
+        return view('pages.event.exclusive', compact('events', 'type'));
     }
 
-    public function talent() {
+    public function talent() 
+    {
         return view('pages.talent');
     }
+
     public function vvip()
     {
         // Data statis untuk contoh
@@ -44,7 +54,9 @@ class PageController extends Controller
             'progressPercentage' => $progressPercentage,
         ]);
     }
-    public function nofreq() {
+
+    public function nofreq() 
+    {
         $videos = [
             [
                 'title' => 'Live Set 1',
@@ -73,4 +85,7 @@ class PageController extends Controller
         ]);
     
     }
+
+    
+
 }
